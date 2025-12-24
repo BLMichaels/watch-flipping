@@ -261,25 +261,32 @@ export function InventoryList({
         </div>
 
         <QuickStats watches={watches} />
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <FilterPresets
-          onApplyPreset={(preset) => {
-            setActivePreset(preset.id);
-            if (preset.filters.status) setStatusFilter(preset.filters.status);
-            if (preset.filters.brand) setBrandFilter(preset.filters.brand);
-            if (preset.filters.profitable !== undefined) setShowOnlyProfitable(preset.filters.profitable);
-          }}
-          onClearFilters={() => {
-            setActivePreset('');
-            setStatusFilter('all');
-            setBrandFilter('all');
-            setShowOnlyProfitable(false);
-            setPriceRange({ min: '', max: '' });
-            setDateRange({ start: '', end: '' });
-            setTagFilter('');
-          }}
-          activePreset={activePreset}
-        />
+            onApplyPreset={(preset) => {
+              setActivePreset(preset.id);
+              if (preset.filters.status) setStatusFilter(preset.filters.status);
+              if (preset.filters.brand) setBrandFilter(preset.filters.brand);
+              if (preset.filters.profitable !== undefined) setShowOnlyProfitable(preset.filters.profitable);
+            }}
+            onClearFilters={() => {
+              setActivePreset('');
+              setStatusFilter('all');
+              setBrandFilter('all');
+              setShowOnlyProfitable(false);
+              setPriceRange({ min: '', max: '' });
+              setDateRange({ start: '', end: '' });
+              setTagFilter('');
+              setAdvancedSearchCriteria(null);
+            }}
+            activePreset={activePreset}
+          />
+          <AdvancedSearch
+            onSearch={(criteria) => setAdvancedSearchCriteria(criteria)}
+            onClear={() => setAdvancedSearchCriteria(null)}
+            brands={Array.from(new Set(watches.map(w => w.brand))).sort()}
+          />
+        </div>
 
         {/* Filters */}
         <Card className="mb-6">
