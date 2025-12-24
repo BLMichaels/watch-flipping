@@ -104,6 +104,7 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
       revenueCleaned: formData.revenueCleaned ? parseFloat(formData.revenueCleaned.toString()) : null,
       revenueServiced: formData.revenueServiced ? parseFloat(formData.revenueServiced.toString()) : null,
       ebayUrl: formData.ebayUrl || null,
+      notes: formData.notes || null,
     };
 
     await onSave(watchData);
@@ -266,6 +267,19 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
                   onChange={(e) => setFormData((prev) => ({ ...prev, conditionNotes: e.target.value }))}
                   rows={3}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Describe the condition, any issues, wear, etc."
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Notes
+                </label>
+                <textarea
+                  value={formData.notes}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, notes: e.target.value }))}
+                  rows={3}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Additional notes, reminders, or observations about this watch"
                 />
               </div>
             </CardContent>
