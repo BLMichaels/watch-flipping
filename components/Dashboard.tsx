@@ -335,6 +335,9 @@ export function Dashboard({ watches, onAddWatch, onViewInventory }: DashboardPro
         {/* Reminders */}
         <WatchReminders watches={watches} />
 
+        {/* Performance Metrics */}
+        <PerformanceMetrics watches={watches} />
+
         {/* Profit Calculator */}
         <div className="mb-6">
           <ProfitCalculator />

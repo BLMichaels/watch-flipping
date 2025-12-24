@@ -46,6 +46,7 @@ export default function Home() {
   const [watches, setWatches] = useState<Watch[]>([]);
   const [selectedWatch, setSelectedWatch] = useState<Watch | null>(null);
   const [loading, setLoading] = useState(true);
+  const { toasts, showToast, removeToast } = useToast();
 
   useEffect(() => {
     fetchWatches();
@@ -320,6 +321,7 @@ export default function Home() {
           </div>
         </div>
       )}
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
     </div>
   );
 }

@@ -403,10 +403,12 @@ export function InventoryList({
               <tbody>
                 {filteredAndSortedWatches.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="py-8 text-center text-gray-500">
-                      No watches found. {searchTerm || statusFilter !== 'all' || brandFilter !== 'all' || showOnlyProfitable
-                        ? 'Try adjusting your filters.'
-                        : 'Add your first watch to get started!'}
+                    <td colSpan={9} className="py-8">
+                      <EmptyState
+                        type={watches.length === 0 ? 'no-watches' : (searchTerm || statusFilter !== 'all' || brandFilter !== 'all' || showOnlyProfitable || advancedSearchCriteria ? 'no-results' : 'no-filtered')}
+                        onAction={watches.length === 0 ? onAddWatch : undefined}
+                        searchTerm={searchTerm}
+                      />
                     </td>
                   </tr>
                 ) : (
