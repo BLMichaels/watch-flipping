@@ -19,6 +19,7 @@ interface Watch {
   revenueServiced?: number | null;
   status: string;
   conditionNotes?: string | null;
+  notes?: string | null;
   images: string[];
   ebayUrl?: string | null;
   aiAnalysis?: string | null;
@@ -207,6 +208,14 @@ export function WatchDetail({
                     <dt className="text-sm font-medium text-gray-500 mb-2">Condition Notes</dt>
                     <dd className="text-sm text-gray-900 whitespace-pre-wrap">
                       {watch.conditionNotes}
+                    </dd>
+                  </div>
+                )}
+                {watch.notes && (
+                  <div className="mt-4">
+                    <dt className="text-sm font-medium text-gray-500 mb-2">Notes</dt>
+                    <dd className="text-sm text-gray-900 whitespace-pre-wrap">
+                      {watch.notes}
                     </dd>
                   </div>
                 )}

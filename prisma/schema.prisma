@@ -28,6 +28,7 @@ model Watch {
   // Status and condition
   status            String   @default("needs_service") // ready_to_sell, needs_service, problem_item
   conditionNotes    String?
+  notes             String?  // General notes/observations
   
   // Images
   images            String[] // Array of image URLs

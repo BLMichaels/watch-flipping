@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
         revenueServiced: body.revenueServiced,
         status: body.status || 'needs_service',
         conditionNotes: body.conditionNotes,
+        notes: body.notes,
         images: body.images || [],
         ebayUrl: body.ebayUrl,
         ebayListingId: body.ebayListingId,

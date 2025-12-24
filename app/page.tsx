@@ -23,6 +23,7 @@ interface Watch {
   revenueServiced: number | null;
   status: string;
   conditionNotes?: string | null;
+  notes?: string | null;
   images: string[];
   ebayUrl?: string | null;
   ebayListingId?: string | null;

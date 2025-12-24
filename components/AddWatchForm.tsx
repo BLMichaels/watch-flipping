@@ -27,6 +27,7 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
     revenueServiced: initialData?.revenueServiced || '',
     status: initialData?.status || 'needs_service',
     conditionNotes: initialData?.conditionNotes || '',
+    notes: initialData?.notes || '',
     images: initialData?.images || [] as string[],
     imageUrls: initialData?.imageUrls || '' as string,
   });

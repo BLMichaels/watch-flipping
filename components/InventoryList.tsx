@@ -131,12 +131,51 @@ export function InventoryList({
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Inventory</h1>
-            <p className="text-gray-600">Manage your watch collection</p>
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Inventory</h1>
+              <p className="text-gray-600">Manage your watch collection</p>
+            </div>
+            <ExportButton watches={watches} />
           </div>
-          <ExportButton watches={watches} />
+          
+          {/* Quick Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <Card>
+              <div className="p-4">
+                <p className="text-sm text-gray-600 mb-1">Total Watches</p>
+                <p className="text-2xl font-bold text-gray-900">{watches.length}</p>
+              </div>
+            </Card>
+            <Card>
+              <div className="p-4">
+                <p className="text-sm text-gray-600 mb-1">Total Value</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  ${watches.reduce((sum, w) => sum + w.purchasePrice, 0).toLocaleString()}
+                </p>
+              </div>
+            </Card>
+            <Card>
+              <div className="p-4">
+                <p className="text-sm text-gray-600 mb-1">Ready to Sell</p>
+                <p className="text-2xl font-bold text-green-600">
+                  {watches.filter(w => w.status === 'ready_to_sell').length}
+                </p>
+              </div>
+            </Card>
+            <Card>
+              <div className="p-4">
+                <p className="text-sm text-gray-600 mb-1">Total Profit</p>
+                <p className="text-2xl font-bold text-blue-600">
+                  ${watches.reduce((sum, w) => {
+                    const best = w.revenueServiced || w.revenueCleaned || w.revenueAsIs || 0;
+                    return sum + (best - w.purchasePrice);
+                  }, 0).toLocaleString()}
+                </p>
+              </div>
+            </Card>
+          </div>
         </div>
 
         {/* Filters */}
@@ -272,28 +311,22 @@ export function InventoryList({
                         )}
                       </td>
                       <td className="py-3 px-4">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => onViewWatch(watch.id)}
                             title="View Details"
+                            className="p-1"
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => onAnalyzeWatch(watch.id)}
-                            title="AI Analysis"
-                          >
-                            <span className="text-xs">AI</span>
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
                             onClick={() => onEditWatch(watch.id)}
                             title="Edit"
+                            className="p-1"
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
@@ -302,6 +335,7 @@ export function InventoryList({
                             size="sm"
                             onClick={() => onDeleteWatch(watch.id)}
                             title="Delete"
+                            className="p-1"
                           >
                             <Trash2 className="h-4 w-4 text-red-600" />
                           </Button>

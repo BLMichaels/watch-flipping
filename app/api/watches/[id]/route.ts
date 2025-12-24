@@ -47,6 +47,7 @@ export async function PUT(
         revenueServiced: body.revenueServiced,
         status: body.status,
         conditionNotes: body.conditionNotes,
+        notes: body.notes,
         images: body.images,
         aiAnalysis: body.aiAnalysis,
         aiRecommendation: body.aiRecommendation,
