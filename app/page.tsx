@@ -213,9 +213,9 @@ export default function Home() {
           aiAnalysis: JSON.stringify(analysis),
           aiRecommendation: analysis.recommendation,
           aiConfidence: analysis.confidence,
-          revenueAsIs: analysis.estimatedMarketValue?.asIs,
-          revenueCleaned: analysis.estimatedMarketValue?.cleaned,
-          revenueServiced: analysis.estimatedMarketValue?.serviced,
+          revenueAsIs: analysis.estimatedMarketValue?.asIs ?? null,
+          revenueCleaned: analysis.estimatedMarketValue?.cleaned ?? null,
+          revenueServiced: analysis.estimatedMarketValue?.serviced ?? null,
         }),
       });
 

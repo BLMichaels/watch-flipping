@@ -34,8 +34,8 @@ const nextConfig = {
     }
     return config;
   },
-  // Mark these as external server packages - don't bundle them
-  serverExternalPackages: ['cheerio', 'undici', 'htmlparser2', 'domutils', 'css-select', 'axios'],
+  // Note: serverExternalPackages is available in Next.js 15+, but we're on 14.2
+  // The webpack config above handles externalizing these packages
 }
 
 module.exports = nextConfig
