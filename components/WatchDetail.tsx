@@ -162,8 +162,13 @@ export function WatchDetail({
                       onChange={handleFileUpload}
                       className="hidden"
                       disabled={uploading}
+                      id="image-upload-input"
                     />
-                    <Button variant="secondary" as="span" disabled={uploading}>
+                    <Button 
+                      variant="secondary" 
+                      disabled={uploading}
+                      onClick={() => document.getElementById('image-upload-input')?.click()}
+                    >
                       <Upload className="h-4 w-4 mr-2" />
                       {uploading ? 'Uploading...' : 'Upload Image'}
                     </Button>
