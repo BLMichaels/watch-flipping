@@ -18,6 +18,18 @@ const nextConfig = {
       },
     ];
   },
+  // Fix for cheerio/undici compatibility with Next.js
+  webpack: (config, { isServer }) => {
+    // Only apply to server-side builds
+    if (isServer) {
+      // Externalize undici to avoid build issues
+      config.externals = config.externals || [];
+      config.externals.push('undici');
+    }
+    return config;
+  },
+  // Ensure server-side only packages are handled correctly
+  serverExternalPackages: ['cheerio', 'undici'],
 }
 
 module.exports = nextConfig
