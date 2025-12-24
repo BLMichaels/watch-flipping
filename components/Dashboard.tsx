@@ -6,6 +6,7 @@ import { Button } from './ui/Button';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { TrendingUp, DollarSign, Package, Percent, Clock, CheckCircle, AlertCircle } from 'lucide-react';
 import { ExportButton } from './ExportButton';
+import { ProfitCalculator } from './ProfitCalculator';
 
 interface Watch {
   id: string;
