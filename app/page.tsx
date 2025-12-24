@@ -141,96 +141,20 @@ export default function Home() {
     }
   };
 
-  const handleImageUpload = async (watchId: string, file: File) => {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      const response = await fetch(`/api/watches/${watchId}/images`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (response.ok) {
-        await fetchWatches();
-        // Refresh selected watch
-        if (selectedWatch?.id === watchId) {
-          const watchResponse = await fetch(`/api/watches/${watchId}`);
-          if (watchResponse.ok) {
-            const watch = await watchResponse.json();
-            setSelectedWatch(watch);
-          }
-        }
-      } else {
-        alert('Failed to upload image');
-      }
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      alert('Failed to upload image');
-    }
+  // Image upload/delete temporarily disabled
+  const handleImageUpload = async () => {
+    alert('Image upload is temporarily disabled');
   };
 
-  const handleImageDelete = async (watchId: string, imageUrl: string) => {
-    try {
-      const response = await fetch(
-        `/api/watches/${watchId}/images?imageUrl=${encodeURIComponent(imageUrl)}`,
-        {
-          method: 'DELETE',
-        }
-      );
-
-      if (response.ok) {
-        await fetchWatches();
-        // Refresh selected watch
-        if (selectedWatch?.id === watchId) {
-          const watchResponse = await fetch(`/api/watches/${watchId}`);
-          if (watchResponse.ok) {
-            const watch = await watchResponse.json();
-            setSelectedWatch(watch);
-          }
-        }
-      } else {
-        alert('Failed to delete image');
-      }
-    } catch (error) {
-      console.error('Error deleting image:', error);
-      alert('Failed to delete image');
-    }
+  const handleImageDelete = async () => {
+    alert('Image deletion is temporarily disabled');
   };
 
   const handleAnalyzeWatch = async (id: string) => {
-    await handleViewWatch(id);
-    // The AI analysis panel will be shown in the watch detail view
+    alert('AI analysis is temporarily disabled');
   };
 
-  const handleAIAnalysisComplete = async (watchId: string, analysis: any) => {
-    try {
-      const response = await fetch(`/api/watches/${watchId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...selectedWatch,
-          aiAnalysis: JSON.stringify(analysis),
-          aiRecommendation: analysis.recommendation,
-          aiConfidence: analysis.confidence,
-          revenueAsIs: analysis.estimatedMarketValue?.asIs ?? null,
-          revenueCleaned: analysis.estimatedMarketValue?.cleaned ?? null,
-          revenueServiced: analysis.estimatedMarketValue?.serviced ?? null,
-        }),
-      });
-
-      if (response.ok) {
-        await fetchWatches();
-        const watchResponse = await fetch(`/api/watches/${watchId}`);
-        if (watchResponse.ok) {
-          const watch = await watchResponse.json();
-          setSelectedWatch(watch);
-        }
-      }
-    } catch (error) {
-      console.error('Error saving AI analysis:', error);
-    }
-  };
+  // AI analysis temporarily disabled
 
   if (loading) {
     return (
@@ -295,21 +219,6 @@ export default function Home() {
             onImageUpload={handleImageUpload}
             onImageDelete={handleImageDelete}
           />
-          <div className="max-w-7xl mx-auto px-6 pb-6">
-            <AIAnalysisPanel
-              watchId={selectedWatch.id}
-              watchData={{
-                title: selectedWatch.title,
-                description: selectedWatch.description,
-                purchasePrice: selectedWatch.purchasePrice,
-                images: selectedWatch.images,
-                conditionNotes: selectedWatch.conditionNotes,
-              }}
-              onAnalysisComplete={(analysis) =>
-                handleAIAnalysisComplete(selectedWatch.id, analysis)
-              }
-            />
-          </div>
         </div>
       )}
 

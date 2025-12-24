@@ -155,24 +155,9 @@ export function WatchDetail({
                   </div>
                 )}
                 <div className="mt-4">
-                  <label className="inline-block">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileUpload}
-                      className="hidden"
-                      disabled={uploading}
-                      id="image-upload-input"
-                    />
-                    <Button 
-                      variant="secondary" 
-                      disabled={uploading}
-                      onClick={() => document.getElementById('image-upload-input')?.click()}
-                    >
-                      <Upload className="h-4 w-4 mr-2" />
-                      {uploading ? 'Uploading...' : 'Upload Image'}
-                    </Button>
-                  </label>
+                  <p className="text-sm text-gray-500">
+                    Image upload is temporarily disabled.
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -305,41 +290,7 @@ export function WatchDetail({
               </CardContent>
             </Card>
 
-            {/* AI Analysis */}
-            {watch.aiAnalysis && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>AI Analysis</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {watch.aiRecommendation && (
-                    <div className="mb-4">
-                      <span
-                        className={`px-3 py-1 rounded-full text-sm font-medium ${
-                          watch.aiRecommendation === 'buy'
-                            ? 'bg-green-100 text-green-800'
-                            : watch.aiRecommendation === 'pass'
-                            ? 'bg-red-100 text-red-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}
-                      >
-                        {watch.aiRecommendation.toUpperCase()}
-                      </span>
-                      {watch.aiConfidence && (
-                        <span className="ml-2 text-sm text-gray-600">
-                          ({watch.aiConfidence}% confidence)
-                        </span>
-                      )}
-                    </div>
-                  )}
-                  <div className="text-sm text-gray-700 whitespace-pre-wrap">
-                    {typeof watch.aiAnalysis === 'string'
-                      ? watch.aiAnalysis
-                      : JSON.stringify(watch.aiAnalysis, null, 2)}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+            {/* AI Analysis - Temporarily disabled */}
           </div>
         </div>
       </div>

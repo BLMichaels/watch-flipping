@@ -65,43 +65,7 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
   };
 
   const handleAnalyze = async () => {
-    setIsAnalyzing(true);
-    try {
-      const response = await fetch('/api/ai-analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: formData.title,
-          description: formData.description,
-          price: formData.purchasePrice ? parseFloat(formData.purchasePrice.toString()) : null,
-          images: formData.images,
-          condition: formData.conditionNotes,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to analyze watch');
-      }
-
-      const analysis = await response.json();
-      
-      // Update form with AI recommendations
-      setFormData((prev) => ({
-        ...prev,
-        revenueAsIs: analysis.estimatedMarketValue?.asIs || prev.revenueAsIs,
-        revenueCleaned: analysis.estimatedMarketValue?.cleaned || prev.revenueCleaned,
-        revenueServiced: analysis.estimatedMarketValue?.serviced || prev.revenueServiced,
-        conditionNotes: prev.conditionNotes || analysis.explanation,
-      }));
-
-      // Show analysis results
-      alert(`AI Recommendation: ${analysis.recommendation.toUpperCase()}\n\n${analysis.explanation}`);
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to analyze watch';
-      alert(errorMessage);
-    } finally {
-      setIsAnalyzing(false);
-    }
+    alert('AI analysis is temporarily disabled. Please enter revenue estimates manually.');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -326,50 +290,18 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
                   type="button"
                   variant="secondary"
                   onClick={handleAnalyze}
-                  disabled={isAnalyzing || !formData.title}
+                  disabled={true}
                 >
-                  {isAnalyzing ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Analyzing...
-                    </>
-                  ) : (
-                    '🤖 Get AI Analysis & Recommendations'
-                  )}
+                  AI Analysis (Disabled)
                 </Button>
+                <p className="text-sm text-gray-500 mt-2">
+                  AI analysis is temporarily disabled. Please enter revenue estimates manually.
+                </p>
               </div>
             </CardContent>
           </Card>
 
-          {formData.images.length > 0 && (
-            <Card className="mb-6">
-              <CardHeader>
-                <CardTitle>Images</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-4 gap-4">
-                  {formData.images.map((imageUrl: string, index: number) => (
-                    <div key={index} className="relative group">
-                      <div className="aspect-square bg-gray-200 rounded-lg overflow-hidden">
-                        <img
-                          src={imageUrl}
-                          alt={`Watch image ${index + 1}`}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => removeImage(index)}
-                        className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
+          {/* Images feature temporarily disabled */}
 
           <div className="flex gap-4">
             <Button type="submit" size="lg">

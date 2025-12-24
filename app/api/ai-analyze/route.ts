@@ -1,18 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { analyzeWatchWithAI } from '@/lib/ai-analysis';
 
+// Temporarily disabled - AI analysis feature
 export async function POST(request: NextRequest) {
-  try {
-    const listingData = await request.json();
-    
-    const analysis = await analyzeWatchWithAI(listingData);
-    return NextResponse.json(analysis);
-  } catch (error: any) {
-    console.error('Error analyzing watch:', error);
-    return NextResponse.json(
-      { error: error.message || 'Failed to analyze watch' },
-      { status: 500 }
-    );
-  }
+  return NextResponse.json(
+    { 
+      error: 'AI analysis is temporarily disabled',
+      recommendation: 'maybe',
+      confidence: 0,
+      explanation: 'AI analysis feature is temporarily disabled. Please use manual entry.',
+    },
+    { status: 503 }
+  );
 }
 
