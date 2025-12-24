@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Watch {
+  id                String   @id @default(cuid())
+  brand             String
+  model             String
+  referenceNumber   String?
+  title             String
+  description       String?
+  purchasePrice     Float
+  purchaseDate      DateTime @default(now())
+  
+  // Projected revenue scenarios
+  revenueAsIs       Float?   // Best case without service
+  revenueCleaned    Float?   // Medium case with cleaning
+  revenueServiced   Float?   // Basic case with full service
+  
+  // Status and condition
+  status            String   @default("needs_service") // ready_to_sell, needs_service, problem_item
+  conditionNotes    String?
+  
+  // Images
+  images            String[] // Array of image URLs
+  
+  // eBay listing info
+  ebayUrl           String?
+  ebayListingId     String?
+  
+  // AI Analysis (if analyzed)
+  aiAnalysis        String?  // JSON string of AI analysis
+  aiRecommendation  String?  // buy, pass, maybe
+  aiConfidence      Float?
+  
+  // Timestamps
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([brand])
+  @@index([status])
+}
+

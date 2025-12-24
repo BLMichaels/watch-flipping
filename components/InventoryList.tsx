@@ -1,0 +1,297 @@
+'use client';
+
+import { useState, useMemo } from 'react';
+import { Card } from './ui/Card';
+import { Button } from './ui/Button';
+import { Eye, Edit, Trash2, Search, ArrowUpDown } from 'lucide-react';
+
+interface Watch {
+  id: string;
+  brand: string;
+  model: string;
+  purchasePrice: number;
+  revenueServiced: number | null;
+  revenueCleaned: number | null;
+  revenueAsIs: number | null;
+  status: string;
+  aiRecommendation?: string | null;
+}
+
+interface InventoryListProps {
+  watches: Watch[];
+  onViewWatch: (id: string) => void;
+  onEditWatch: (id: string) => void;
+  onDeleteWatch: (id: string) => void;
+  onAnalyzeWatch: (id: string) => void;
+}
+
+type SortField = 'brand' | 'purchasePrice' | 'profit' | 'recommendation';
+type SortDirection = 'asc' | 'desc';
+
+export function InventoryList({
+  watches,
+  onViewWatch,
+  onEditWatch,
+  onDeleteWatch,
+  onAnalyzeWatch,
+}: InventoryListProps) {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortField, setSortField] = useState<SortField>('brand');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+
+  const getBestProfit = (watch: Watch) => {
+    const bestRevenue = watch.revenueServiced || watch.revenueCleaned || watch.revenueAsIs || 0;
+    return bestRevenue - watch.purchasePrice;
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'ready_to_sell':
+        return 'bg-green-100 text-green-800';
+      case 'needs_service':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'problem_item':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case 'ready_to_sell':
+        return 'Ready to Sell';
+      case 'needs_service':
+        return 'Needs Service';
+      case 'problem_item':
+        return 'Problem Item';
+      default:
+        return status;
+    }
+  };
+
+  const filteredAndSortedWatches = useMemo(() => {
+    let filtered = watches.filter((watch) => {
+      const matchesSearch =
+        watch.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        watch.model.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus = statusFilter === 'all' || watch.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    });
+
+    filtered.sort((a, b) => {
+      let aValue: any;
+      let bValue: any;
+
+      switch (sortField) {
+        case 'brand':
+          aValue = a.brand;
+          bValue = b.brand;
+          break;
+        case 'purchasePrice':
+          aValue = a.purchasePrice;
+          bValue = b.purchasePrice;
+          break;
+        case 'profit':
+          aValue = getBestProfit(a);
+          bValue = getBestProfit(b);
+          break;
+        case 'recommendation':
+          aValue = a.aiRecommendation || '';
+          bValue = b.aiRecommendation || '';
+          break;
+        default:
+          return 0;
+      }
+
+      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    return filtered;
+  }, [watches, searchTerm, sortField, sortDirection, statusFilter]);
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Inventory</h1>
+          <p className="text-gray-600">Manage your watch collection</p>
+        </div>
+
+        {/* Filters */}
+        <Card className="mb-6">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search by brand or model..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="all">All Status</option>
+              <option value="ready_to_sell">Ready to Sell</option>
+              <option value="needs_service">Needs Service</option>
+              <option value="problem_item">Problem Item</option>
+            </select>
+          </div>
+        </Card>
+
+        {/* Table */}
+        <Card>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                    <button
+                      onClick={() => handleSort('brand')}
+                      className="flex items-center gap-2 hover:text-gray-900"
+                    >
+                      Brand
+                      <ArrowUpDown className="h-4 w-4" />
+                    </button>
+                  </th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Model</th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                    <button
+                      onClick={() => handleSort('purchasePrice')}
+                      className="flex items-center gap-2 hover:text-gray-900"
+                    >
+                      Purchase Price
+                      <ArrowUpDown className="h-4 w-4" />
+                    </button>
+                  </th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                    <button
+                      onClick={() => handleSort('profit')}
+                      className="flex items-center gap-2 hover:text-gray-900"
+                    >
+                      Best-Case Profit
+                      <ArrowUpDown className="h-4 w-4" />
+                    </button>
+                  </th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Status</th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                    <button
+                      onClick={() => handleSort('recommendation')}
+                      className="flex items-center gap-2 hover:text-gray-900"
+                    >
+                      Recommendation
+                      <ArrowUpDown className="h-4 w-4" />
+                    </button>
+                  </th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredAndSortedWatches.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="py-8 text-center text-gray-500">
+                      No watches found. Add your first watch to get started!
+                    </td>
+                  </tr>
+                ) : (
+                  filteredAndSortedWatches.map((watch) => (
+                    <tr key={watch.id} className="border-b border-gray-100 hover:bg-gray-50">
+                      <td className="py-3 px-4">{watch.brand}</td>
+                      <td className="py-3 px-4">{watch.model}</td>
+                      <td className="py-3 px-4">${watch.purchasePrice.toLocaleString()}</td>
+                      <td className="py-3 px-4">
+                        <span className="font-semibold text-green-600">
+                          ${getBestProfit(watch).toLocaleString()}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4">
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                            watch.status
+                          )}`}
+                        >
+                          {getStatusLabel(watch.status)}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4">
+                        {watch.aiRecommendation ? (
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              watch.aiRecommendation === 'buy'
+                                ? 'bg-green-100 text-green-800'
+                                : watch.aiRecommendation === 'pass'
+                                ? 'bg-red-100 text-red-800'
+                                : 'bg-yellow-100 text-yellow-800'
+                            }`}
+                          >
+                            {watch.aiRecommendation.toUpperCase()}
+                          </span>
+                        ) : (
+                          <span className="text-gray-400 text-sm">Not analyzed</span>
+                        )}
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => onViewWatch(watch.id)}
+                            title="View Details"
+                          >
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => onAnalyzeWatch(watch.id)}
+                            title="AI Analysis"
+                          >
+                            <span className="text-xs">AI</span>
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => onEditWatch(watch.id)}
+                            title="Edit"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => onDeleteWatch(watch.id)}
+                            title="Delete"
+                          >
+                            <Trash2 className="h-4 w-4 text-red-600" />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
