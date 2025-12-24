@@ -211,7 +211,7 @@ export function InventoryList({
                     </td>
                   </tr>
                 ) : (
-                  filteredAndSortedWatches.map((watch) => (
+                  filteredAndSortedWatches.map((watch: Watch) => (
                     <tr key={watch.id} className="border-b border-gray-100 hover:bg-gray-50">
                       <td className="py-3 px-4">{watch.brand}</td>
                       <td className="py-3 px-4">{watch.model}</td>

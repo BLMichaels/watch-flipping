@@ -72,7 +72,7 @@ export function Dashboard({ watches, onAddWatch, onViewInventory }: DashboardPro
     return acc;
   }, {} as Record<string, number>);
 
-  const pieData = Object.entries(brandData).map(([name, value]) => ({
+  const pieData = Object.entries(brandData).map(([name, value]: [string, number]) => ({
     name,
     value,
   }));
@@ -87,7 +87,7 @@ export function Dashboard({ watches, onAddWatch, onViewInventory }: DashboardPro
   ];
 
   // Cumulative profit projection (simplified)
-  const profitData = watches.map((watch, index) => {
+  const profitData = watches.map((watch: Watch, index: number) => {
     const bestRevenue = watch.revenueServiced || watch.revenueCleaned || watch.revenueAsIs || 0;
     const profit = bestRevenue - watch.purchasePrice;
     const cumulative = watches.slice(0, index + 1).reduce((sum, w) => {
@@ -206,7 +206,7 @@ export function Dashboard({ watches, onAddWatch, onViewInventory }: DashboardPro
                     fill="#8884d8"
                     dataKey="value"
                   >
-                    {pieData.map((entry, index) => (
+                    {pieData.map((entry: { name: string; value: number }, index: number) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>

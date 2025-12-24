@@ -132,7 +132,7 @@ export function WatchDetail({
                   </div>
                 ) : (
                   <div className="grid grid-cols-3 gap-4">
-                    {watch.images.map((imageUrl, index) => (
+                    {watch.images.map((imageUrl: string, index: number) => (
                       <div key={index} className="relative group">
                         <div
                           className="aspect-square bg-gray-200 rounded-lg overflow-hidden cursor-pointer"

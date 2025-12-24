@@ -56,8 +56,9 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
         description: data.description || prev.description,
         images: data.images || prev.images,
       }));
-    } catch (error: any) {
-      alert(error.message || 'Failed to scrape eBay listing');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to scrape eBay listing';
+      alert(errorMessage);
     } finally {
       setIsScraping(false);
     }
