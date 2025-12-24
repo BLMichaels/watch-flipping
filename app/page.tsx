@@ -6,8 +6,9 @@ import { InventoryList } from '@/components/InventoryList';
 import { WatchDetail } from '@/components/WatchDetail';
 import { AddWatchForm } from '@/components/AddWatchForm';
 import { Navigation } from '@/components/Navigation';
+import { SummaryReport } from '@/components/SummaryReport';
 
-type View = 'dashboard' | 'inventory' | 'watch-detail' | 'add-watch' | 'edit-watch';
+type View = 'dashboard' | 'inventory' | 'watch-detail' | 'add-watch' | 'edit-watch' | 'summary';
 
 interface Watch {
   id: string;
@@ -206,6 +207,8 @@ export default function Home() {
             setView('dashboard');
           } else if (newView === 'inventory') {
             setView('inventory');
+          } else if (newView === 'summary') {
+            setView('summary');
           } else if (newView === 'add-watch') {
             handleAddWatch();
           }
@@ -262,6 +265,14 @@ export default function Home() {
           }}
           initialData={selectedWatch || undefined}
         />
+      )}
+
+      {view === 'summary' && (
+        <div className="min-h-screen bg-gray-50 p-6">
+          <div className="max-w-7xl mx-auto">
+            <SummaryReport watches={watches} />
+          </div>
+        </div>
       )}
     </div>
   );

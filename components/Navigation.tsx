@@ -1,6 +1,6 @@
 'use client';
 
-import { Home, Package, Plus } from 'lucide-react';
+import { Home, Package, Plus, BarChart3 } from 'lucide-react';
 import { Button } from './ui/Button';
 
 interface NavigationProps {
@@ -31,6 +31,14 @@ export function Navigation({ currentView, onNavigate }: NavigationProps) {
               >
                 <Package className="h-4 w-4 mr-2" />
                 Inventory
+              </Button>
+              <Button
+                variant={currentView === 'summary' ? 'primary' : 'ghost'}
+                size="sm"
+                onClick={() => onNavigate('summary')}
+              >
+                <BarChart3 className="h-4 w-4 mr-2" />
+                Summary
               </Button>
             </div>
           </div>

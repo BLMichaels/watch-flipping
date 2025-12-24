@@ -11,6 +11,7 @@ interface Watch {
   brand: string;
   model: string;
   purchasePrice: number;
+  purchaseDate?: string;
   revenueServiced: number | null;
   revenueCleaned: number | null;
   revenueAsIs: number | null;
@@ -26,7 +27,7 @@ interface InventoryListProps {
   onAnalyzeWatch: (id: string) => void;
 }
 
-type SortField = 'brand' | 'purchasePrice' | 'profit' | 'recommendation';
+type SortField = 'brand' | 'purchasePrice' | 'profit' | 'recommendation' | 'purchaseDate' | 'roi';
 type SortDirection = 'asc' | 'desc';
 
 export function InventoryList({
@@ -111,6 +112,16 @@ export function InventoryList({
         case 'recommendation':
           aValue = a.aiRecommendation || '';
           bValue = b.aiRecommendation || '';
+          break;
+        case 'purchaseDate':
+          aValue = a.purchaseDate ? new Date(a.purchaseDate).getTime() : 0;
+          bValue = b.purchaseDate ? new Date(b.purchaseDate).getTime() : 0;
+          break;
+        case 'roi':
+          const aBest = a.revenueServiced || a.revenueCleaned || a.revenueAsIs || 0;
+          const bBest = b.revenueServiced || b.revenueCleaned || b.revenueAsIs || 0;
+          aValue = a.purchasePrice > 0 ? ((aBest - a.purchasePrice) / a.purchasePrice) * 100 : 0;
+          bValue = b.purchasePrice > 0 ? ((bBest - b.purchasePrice) / b.purchasePrice) * 100 : 0;
           break;
         default:
           return 0;
@@ -258,6 +269,15 @@ export function InventoryList({
                       <ArrowUpDown className="h-4 w-4" />
                     </button>
                   </th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                    <button
+                      onClick={() => handleSort('roi')}
+                      className="flex items-center gap-2 hover:text-gray-900"
+                    >
+                      ROI %
+                      <ArrowUpDown className="h-4 w-4" />
+                    </button>
+                  </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-700">Status</th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-700">
                     <button
@@ -274,8 +294,10 @@ export function InventoryList({
               <tbody>
                 {filteredAndSortedWatches.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="py-8 text-center text-gray-500">
-                      No watches found. Add your first watch to get started!
+                    <td colSpan={8} className="py-8 text-center text-gray-500">
+                      No watches found. {searchTerm || statusFilter !== 'all' || brandFilter !== 'all' || showOnlyProfitable
+                        ? 'Try adjusting your filters.'
+                        : 'Add your first watch to get started!'}
                     </td>
                   </tr>
                 ) : (
@@ -288,6 +310,18 @@ export function InventoryList({
                         <span className="font-semibold text-green-600">
                           ${getBestProfit(watch).toLocaleString()}
                         </span>
+                      </td>
+                      <td className="py-3 px-4">
+                        {(() => {
+                          const bestRevenue = watch.revenueServiced || watch.revenueCleaned || watch.revenueAsIs || 0;
+                          const profit = bestRevenue - watch.purchasePrice;
+                          const roi = watch.purchasePrice > 0 ? (profit / watch.purchasePrice) * 100 : 0;
+                          return (
+                            <span className={`font-semibold ${roi > 0 ? 'text-green-600' : roi < 0 ? 'text-red-600' : 'text-gray-600'}`}>
+                              {roi.toFixed(1)}%
+                            </span>
+                          );
+                        })()}
                       </td>
                       <td className="py-3 px-4">
                         <span
