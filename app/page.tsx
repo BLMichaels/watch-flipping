@@ -117,12 +117,13 @@ export default function Home() {
           setView('inventory');
           setSelectedWatch(null);
         }
+        showToast('Watch deleted successfully', 'success');
       } else {
-        alert('Failed to delete watch');
+        showToast('Failed to delete watch', 'error');
       }
     } catch (error) {
       console.error('Error deleting watch:', error);
-      alert('Failed to delete watch');
+      showToast('Failed to delete watch', 'error');
     }
   };
 
