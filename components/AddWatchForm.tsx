@@ -13,6 +13,7 @@ interface AddWatchFormProps {
 
 export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProps) {
   const [isScraping, setIsScraping] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
     ebayUrl: '',
     brand: initialData?.brand || '',
@@ -27,6 +28,7 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
     status: initialData?.status || 'needs_service',
     conditionNotes: initialData?.conditionNotes || '',
     images: initialData?.images || [] as string[],
+    imageUrls: initialData?.imageUrls || '' as string,
   });
 
   const handleScrape = async () => {
@@ -67,8 +69,32 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
     alert('AI analysis is temporarily disabled. Please enter revenue estimates manually.');
   };
 
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!formData.brand.trim()) {
+      newErrors.brand = 'Brand is required';
+    }
+    if (!formData.model.trim()) {
+      newErrors.model = 'Model is required';
+    }
+    if (!formData.title.trim()) {
+      newErrors.title = 'Title is required';
+    }
+    if (!formData.purchasePrice || parseFloat(formData.purchasePrice.toString()) <= 0) {
+      newErrors.purchasePrice = 'Purchase price must be greater than 0';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
     
     const watchData = {
       ...formData,
@@ -141,9 +167,15 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
                     type="text"
                     required
                     value={formData.brand}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, brand: e.target.value }))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    onChange={(e) => {
+                      setFormData((prev) => ({ ...prev, brand: e.target.value }));
+                      if (errors.brand) setErrors((prev) => ({ ...prev, brand: '' }));
+                    }}
+                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      errors.brand ? 'border-red-500' : 'border-gray-300'
+                    }`}
                   />
+                  {errors.brand && <p className="text-red-500 text-sm mt-1">{errors.brand}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -153,9 +185,15 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
                     type="text"
                     required
                     value={formData.model}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, model: e.target.value }))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    onChange={(e) => {
+                      setFormData((prev) => ({ ...prev, model: e.target.value }));
+                      if (errors.model) setErrors((prev) => ({ ...prev, model: '' }));
+                    }}
+                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      errors.model ? 'border-red-500' : 'border-gray-300'
+                    }`}
                   />
+                  {errors.model && <p className="text-red-500 text-sm mt-1">{errors.model}</p>}
                 </div>
               </div>
 
@@ -195,9 +233,15 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
                   type="text"
                   required
                   value={formData.title}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  onChange={(e) => {
+                    setFormData((prev) => ({ ...prev, title: e.target.value }));
+                    if (errors.title) setErrors((prev) => ({ ...prev, title: '' }));
+                  }}
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    errors.title ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 />
+                {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
               </div>
 
               <div>
@@ -240,9 +284,15 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
                   step="0.01"
                   required
                   value={formData.purchasePrice}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, purchasePrice: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  onChange={(e) => {
+                    setFormData((prev) => ({ ...prev, purchasePrice: e.target.value }));
+                    if (errors.purchasePrice) setErrors((prev) => ({ ...prev, purchasePrice: '' }));
+                  }}
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    errors.purchasePrice ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 />
+                {errors.purchasePrice && <p className="text-red-500 text-sm mt-1">{errors.purchasePrice}</p>}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -300,7 +350,35 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
             </CardContent>
           </Card>
 
-          {/* Images feature temporarily disabled */}
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle>Image URLs (Optional)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Paste image URLs (one per line)
+                </label>
+                <textarea
+                  value={formData.imageUrls}
+                  onChange={(e) => {
+                    const urls = e.target.value.split('\n').filter(url => url.trim());
+                    setFormData((prev) => ({ 
+                      ...prev, 
+                      imageUrls: e.target.value,
+                      images: urls
+                    }));
+                  }}
+                  rows={4}
+                  placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                <p className="text-sm text-gray-500 mt-2">
+                  Enter image URLs, one per line. These will be saved with the watch.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
 
           <div className="flex gap-4">
             <Button type="submit" size="lg">
