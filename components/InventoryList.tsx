@@ -5,7 +5,6 @@ import { Card } from './ui/Card';
 import { Button } from './ui/Button';
 import { Eye, Edit, Trash2, Search, ArrowUpDown } from 'lucide-react';
 import { ExportButton } from './ExportButton';
-import { Button } from './ui/Button';
 
 interface Watch {
   id: string;

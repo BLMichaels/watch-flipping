@@ -16,7 +16,6 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
   const [isScraping, setIsScraping] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showTemplates, setShowTemplates] = useState(false);
-  const [showTemplates, setShowTemplates] = useState(false);
   const [formData, setFormData] = useState({
     ebayUrl: '',
     brand: initialData?.brand || '',
