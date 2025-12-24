@@ -7,8 +7,8 @@ interface Watch {
   id: string;
   brand: string;
   model?: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface RecentActivityProps {
@@ -19,10 +19,16 @@ interface RecentActivityProps {
 export function RecentActivity({ watches, limit = 5 }: RecentActivityProps) {
   // Sort by most recently updated
   const recentWatches = [...watches]
-    .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+    .filter(w => w.updatedAt || w.createdAt)
+    .sort((a, b) => {
+      const aDate = a.updatedAt || a.createdAt || '';
+      const bDate = b.updatedAt || b.createdAt || '';
+      return new Date(bDate).getTime() - new Date(aDate).getTime();
+    })
     .slice(0, limit);
 
-  const getTimeAgo = (date: string) => {
+  const getTimeAgo = (date: string | undefined) => {
+    if (!date) return 'Recently';
     const now = new Date();
     const then = new Date(date);
     const diffInSeconds = Math.floor((now.getTime() - then.getTime()) / 1000);
@@ -46,7 +52,9 @@ export function RecentActivity({ watches, limit = 5 }: RecentActivityProps) {
       <CardContent>
         <div className="space-y-3">
           {recentWatches.map((watch) => {
-            const isNew = new Date(watch.createdAt).getTime() === new Date(watch.updatedAt).getTime();
+            const createdAt = watch.createdAt || '';
+            const updatedAt = watch.updatedAt || createdAt;
+            const isNew = createdAt && new Date(createdAt).getTime() === new Date(updatedAt).getTime();
             return (
               <div key={watch.id} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg">
                 <div className={`p-2 rounded-full ${
@@ -63,7 +71,7 @@ export function RecentActivity({ watches, limit = 5 }: RecentActivityProps) {
                     {watch.brand} {watch.model || ''}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {isNew ? 'Added' : 'Updated'} {getTimeAgo(watch.updatedAt)}
+                    {isNew ? 'Added' : 'Updated'} {getTimeAgo(updatedAt)}
                   </p>
                 </div>
                 <Clock className="h-4 w-4 text-gray-400 flex-shrink-0" />

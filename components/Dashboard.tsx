@@ -24,8 +24,8 @@ interface Watch {
   revenueCleaned: number | null;
   revenueServiced: number | null;
   status: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface DashboardProps {
