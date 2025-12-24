@@ -19,9 +19,9 @@ interface Watch {
   description?: string | null;
   purchasePrice: number;
   purchaseDate: string;
-  revenueAsIs?: number | null;
-  revenueCleaned?: number | null;
-  revenueServiced?: number | null;
+  revenueAsIs: number | null;
+  revenueCleaned: number | null;
+  revenueServiced: number | null;
   status: string;
   conditionNotes?: string | null;
   images: string[];
