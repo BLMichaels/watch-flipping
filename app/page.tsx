@@ -40,6 +40,8 @@ interface Watch {
   aiAnalysis?: string | null;
   aiRecommendation?: string | null;
   aiConfidence?: number | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export default function Home() {
