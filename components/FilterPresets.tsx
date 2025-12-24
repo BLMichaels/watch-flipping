@@ -55,15 +55,19 @@ export function FilterPresets({ onApplyPreset, onClearFilters, activePreset }: F
           variant={activePreset === preset.id ? 'primary' : 'secondary'}
           size="sm"
           onClick={() => onApplyPreset(preset)}
+          className={activePreset === preset.id 
+            ? '' 
+            : 'bg-white border-2 border-gray-300 text-gray-700 font-medium hover:bg-gray-50 hover:border-gray-400 hover:text-gray-900'}
         >
           {preset.name}
         </Button>
       ))}
       {activePreset && (
         <Button
-          variant="ghost"
+          variant="secondary"
           size="sm"
           onClick={onClearFilters}
+          className="bg-white border-2 border-gray-300 text-gray-700 font-medium hover:bg-gray-50 hover:border-gray-400 hover:text-gray-900"
         >
           <X className="h-4 w-4 mr-1" />
           Clear

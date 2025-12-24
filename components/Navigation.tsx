@@ -17,25 +17,28 @@ export function Navigation({ currentView, onNavigate }: NavigationProps) {
             <h1 className="text-xl font-bold text-gray-900">Watch Flipping Manager</h1>
             <div className="flex items-center gap-2">
               <Button
-                variant={currentView === 'dashboard' ? 'primary' : 'ghost'}
+                variant={currentView === 'dashboard' ? 'primary' : 'secondary'}
                 size="sm"
                 onClick={() => onNavigate('dashboard')}
+                className={currentView === 'dashboard' ? '' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'}
               >
                 <Home className="h-4 w-4 mr-2" />
                 Dashboard
               </Button>
               <Button
-                variant={currentView === 'inventory' ? 'primary' : 'ghost'}
+                variant={currentView === 'inventory' ? 'primary' : 'secondary'}
                 size="sm"
                 onClick={() => onNavigate('inventory')}
+                className={currentView === 'inventory' ? '' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'}
               >
                 <Package className="h-4 w-4 mr-2" />
                 Inventory
               </Button>
               <Button
-                variant={currentView === 'summary' ? 'primary' : 'ghost'}
+                variant={currentView === 'summary' ? 'primary' : 'secondary'}
                 size="sm"
                 onClick={() => onNavigate('summary')}
+                className={currentView === 'summary' ? '' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'}
               >
                 <BarChart3 className="h-4 w-4 mr-2" />
                 Summary

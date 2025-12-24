@@ -27,7 +27,9 @@ export function QuickStatusUpdate({ currentStatus, onStatusChange }: QuickStatus
             variant={isActive ? 'primary' : 'secondary'}
             size="sm"
             onClick={() => onStatusChange(status.value)}
-            className={isActive ? '' : 'opacity-70'}
+            className={isActive 
+              ? '' 
+              : 'bg-white border-2 border-gray-300 text-gray-700 font-medium hover:bg-gray-50 hover:border-gray-400 hover:text-gray-900'}
           >
             <Icon className="h-4 w-4 mr-1" />
             {status.label}
