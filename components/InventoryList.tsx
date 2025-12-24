@@ -258,6 +258,26 @@ export function InventoryList({
           </div>
         </div>
 
+        <QuickStats watches={watches} />
+        <FilterPresets
+          onApplyPreset={(preset) => {
+            setActivePreset(preset.id);
+            if (preset.filters.status) setStatusFilter(preset.filters.status);
+            if (preset.filters.brand) setBrandFilter(preset.filters.brand);
+            if (preset.filters.profitable !== undefined) setShowOnlyProfitable(preset.filters.profitable);
+          }}
+          onClearFilters={() => {
+            setActivePreset('');
+            setStatusFilter('all');
+            setBrandFilter('all');
+            setShowOnlyProfitable(false);
+            setPriceRange({ min: '', max: '' });
+            setDateRange({ start: '', end: '' });
+            setTagFilter('');
+          }}
+          activePreset={activePreset}
+        />
+
         {/* Filters */}
         <Card className="mb-6">
           <div className="flex flex-col md:flex-row gap-4">
@@ -472,6 +492,15 @@ export function InventoryList({
           </div>
         </Card>
       </div>
+      {showComparison && selectedWatches.size >= 2 && (
+        <WatchComparison
+          watches={filteredAndSortedWatches.filter((w: Watch) => selectedWatches.has(w.id))}
+          onClose={() => {
+            setShowComparison(false);
+            setSelectedWatches(new Set());
+          }}
+        />
+      )}
     </div>
   );
 }
