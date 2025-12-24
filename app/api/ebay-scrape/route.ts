@@ -5,26 +5,17 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest) {
-  try {
-    const { url } = await request.json();
-    
-    if (!url || !url.includes('ebay.com')) {
-      return NextResponse.json(
-        { error: 'Invalid eBay URL' },
-        { status: 400 }
-      );
-    }
-    
-    // Dynamic import to avoid bundling issues
-    const { scrapeeBayListing } = await import('@/lib/ebay-scraper');
-    const listingData = await scrapeeBayListing(url);
-    return NextResponse.json(listingData);
-  } catch (error: any) {
-    console.error('Error scraping eBay:', error);
-    return NextResponse.json(
-      { error: error.message || 'Failed to scrape eBay listing' },
-      { status: 500 }
-    );
-  }
+  // Temporarily disabled - eBay scraping feature
+  return NextResponse.json(
+    { 
+      error: 'eBay scraping is temporarily disabled. Please use manual entry.',
+      title: '',
+      description: '',
+      price: null,
+      images: [],
+      condition: null,
+    },
+    { status: 503 }
+  );
 }
 

@@ -1,13 +1,7 @@
-// Lazy load cheerio only when needed to avoid build issues
-let cheerio: any;
-let axios: any;
-
+// Temporarily disabled eBay scraping to fix build issues
+// Will be re-enabled after core app is working
 async function loadDependencies() {
-  if (!cheerio || !axios) {
-    cheerio = await import('cheerio').then(m => m.default || m);
-    axios = await import('axios').then(m => m.default || m);
-  }
-  return { cheerio, axios };
+  throw new Error('eBay scraping is temporarily disabled. Please use manual entry.');
 }
 
 export interface eBayListingData {

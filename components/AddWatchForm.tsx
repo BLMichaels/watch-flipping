@@ -138,32 +138,29 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
         <form onSubmit={handleSubmit}>
           <Card className="mb-6">
             <CardHeader>
-              <CardTitle>eBay Listing (Optional)</CardTitle>
+              <CardTitle>eBay Listing (Optional - Currently Disabled)</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex gap-2">
                 <input
                   type="url"
-                  placeholder="Paste eBay URL here..."
+                  placeholder="eBay scraping temporarily disabled - use manual entry"
                   value={formData.ebayUrl}
                   onChange={(e) => setFormData((prev) => ({ ...prev, ebayUrl: e.target.value }))}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-100"
+                  disabled
                 />
                 <Button
                   type="button"
                   onClick={handleScrape}
-                  disabled={isScraping || !formData.ebayUrl}
+                  disabled={true}
                 >
-                  {isScraping ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Scraping...
-                    </>
-                  ) : (
-                    'Scrape Listing'
-                  )}
+                  Disabled
                 </Button>
               </div>
+              <p className="text-sm text-gray-500 mt-2">
+                eBay scraping feature is temporarily disabled. Please enter watch details manually.
+              </p>
             </CardContent>
           </Card>
 
