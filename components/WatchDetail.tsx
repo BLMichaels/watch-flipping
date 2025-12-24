@@ -21,6 +21,12 @@ interface Watch {
   status: string;
   conditionNotes?: string | null;
   notes?: string | null;
+  tags?: string[];
+  serviceCost?: number | null;
+  cleaningCost?: number | null;
+  otherCosts?: number | null;
+  soldDate?: string | null;
+  soldPrice?: number | null;
   images: string[];
   ebayUrl?: string | null;
   aiAnalysis?: string | null;
@@ -57,6 +63,8 @@ export function WatchDetail({
         return 'bg-yellow-100 text-yellow-800';
       case 'problem_item':
         return 'bg-red-100 text-red-800';
+      case 'sold':
+        return 'bg-blue-100 text-blue-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
@@ -70,14 +78,20 @@ export function WatchDetail({
         return 'Needs Service';
       case 'problem_item':
         return 'Problem Item';
+      case 'sold':
+        return 'Sold';
       default:
         return status;
     }
   };
 
   const bestRevenue = watch.revenueServiced || watch.revenueCleaned || watch.revenueAsIs || 0;
-  const profit = bestRevenue - watch.purchasePrice;
-  const roi = watch.purchasePrice > 0 ? (profit / watch.purchasePrice) * 100 : 0;
+  const totalCosts = watch.purchasePrice + 
+                     (watch.serviceCost || 0) + 
+                     (watch.cleaningCost || 0) + 
+                     (watch.otherCosts || 0);
+  const profit = bestRevenue - totalCosts;
+  const roi = totalCosts > 0 ? (profit / totalCosts) * 100 : 0;
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -236,6 +250,21 @@ export function WatchDetail({
                     </dd>
                   </div>
                 )}
+                {watch.tags && watch.tags.length > 0 && (
+                  <div className="mt-4">
+                    <dt className="text-sm font-medium text-gray-500 mb-2">Tags</dt>
+                    <dd className="flex flex-wrap gap-2">
+                      {watch.tags.map((tag, index) => (
+                        <span
+                          key={index}
+                          className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </dd>
+                  </div>
+                )}
                 {watch.ebayUrl && (
                   <div className="mt-4">
                     <dt className="text-sm font-medium text-gray-500 mb-2">eBay Listing</dt>
@@ -285,12 +314,38 @@ export function WatchDetail({
                       ${watch.purchasePrice.toLocaleString()}
                     </p>
                   </div>
+                  {(watch.serviceCost || watch.cleaningCost || watch.otherCosts) && (
+                    <div>
+                      <p className="text-sm text-gray-600">Additional Costs</p>
+                      <div className="text-sm text-gray-700 space-y-1">
+                        {watch.serviceCost && <div>Service: ${watch.serviceCost.toLocaleString()}</div>}
+                        {watch.cleaningCost && <div>Cleaning: ${watch.cleaningCost.toLocaleString()}</div>}
+                        {watch.otherCosts && <div>Other: ${watch.otherCosts.toLocaleString()}</div>}
+                      </div>
+                      <p className="text-sm font-semibold text-gray-900 mt-2">
+                        Total Cost: ${totalCosts.toLocaleString()}
+                      </p>
+                    </div>
+                  )}
                   <div>
                     <p className="text-sm text-gray-600">Projected Revenue (Best Case)</p>
                     <p className="text-xl font-bold text-green-600">
                       ${bestRevenue.toLocaleString()}
                     </p>
                   </div>
+                  {watch.soldPrice && (
+                    <div className="p-3 bg-green-50 rounded-lg">
+                      <p className="text-sm text-gray-600">Sold Price</p>
+                      <p className="text-xl font-bold text-green-600">
+                        ${watch.soldPrice.toLocaleString()}
+                      </p>
+                      {watch.soldDate && (
+                        <p className="text-xs text-gray-500 mt-1">
+                          Sold: {new Date(watch.soldDate).toLocaleDateString()}
+                        </p>
+                      )}
+                    </div>
+                  )}
                   <div className="pt-4 border-t border-gray-200">
                     <p className="text-sm text-gray-600">Projected Profit</p>
                     <p className="text-2xl font-bold text-gray-900">

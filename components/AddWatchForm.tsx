@@ -28,6 +28,13 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
     status: initialData?.status || 'needs_service',
     conditionNotes: initialData?.conditionNotes || '',
     notes: initialData?.notes || '',
+    tags: initialData?.tags || [] as string[],
+    tagsInput: initialData?.tags?.join(', ') || '',
+    serviceCost: initialData?.serviceCost || '',
+    cleaningCost: initialData?.cleaningCost || '',
+    otherCosts: initialData?.otherCosts || '',
+    soldPrice: initialData?.soldPrice || '',
+    soldDate: initialData?.soldDate ? new Date(initialData.soldDate).toISOString().split('T')[0] : '',
     images: initialData?.images || [] as string[],
     imageUrls: initialData?.imageUrls || '' as string,
   });
@@ -105,6 +112,12 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
       revenueServiced: formData.revenueServiced ? parseFloat(formData.revenueServiced.toString()) : null,
       ebayUrl: formData.ebayUrl || null,
       notes: formData.notes || null,
+      tags: formData.tagsInput ? formData.tagsInput.split(',').map(t => t.trim()).filter(t => t) : [],
+      serviceCost: formData.serviceCost ? parseFloat(formData.serviceCost.toString()) : null,
+      cleaningCost: formData.cleaningCost ? parseFloat(formData.cleaningCost.toString()) : null,
+      otherCosts: formData.otherCosts ? parseFloat(formData.otherCosts.toString()) : null,
+      soldPrice: formData.soldPrice ? parseFloat(formData.soldPrice.toString()) : null,
+      soldDate: formData.soldDate || null,
     };
 
     await onSave(watchData);
@@ -220,9 +233,10 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
                     onChange={(e) => setFormData((prev) => ({ ...prev, status: e.target.value }))}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
-                    <option value="needs_service">Needs Service</option>
-                    <option value="ready_to_sell">Ready to Sell</option>
-                    <option value="problem_item">Problem Item</option>
+                  <option value="needs_service">Needs Service</option>
+                  <option value="ready_to_sell">Ready to Sell</option>
+                  <option value="problem_item">Problem Item</option>
+                  <option value="sold">Sold</option>
                   </select>
                 </div>
               </div>
@@ -282,6 +296,79 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
                   placeholder="Additional notes, reminders, or observations about this watch"
                 />
               </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Tags (comma-separated)
+                </label>
+                <input
+                  type="text"
+                  value={formData.tagsInput}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, tagsInput: e.target.value }))}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="e.g., vintage, luxury, sports, investment"
+                />
+                <p className="text-xs text-gray-500 mt-1">Separate tags with commas</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle>Cost Tracking</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Service Cost
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={formData.serviceCost}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, serviceCost: e.target.value }))}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="0.00"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Cleaning Cost
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={formData.cleaningCost}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, cleaningCost: e.target.value }))}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="0.00"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Other Costs
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={formData.otherCosts}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, otherCosts: e.target.value }))}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="0.00"
+                  />
+                </div>
+              </div>
+              {(() => {
+                const totalCosts = (parseFloat(formData.serviceCost?.toString() || '0') || 0) +
+                                  (parseFloat(formData.cleaningCost?.toString() || '0') || 0) +
+                                  (parseFloat(formData.otherCosts?.toString() || '0') || 0);
+                return totalCosts > 0 && (
+                  <div className="pt-2 border-t border-gray-200">
+                    <p className="text-sm text-gray-600">Total Additional Costs</p>
+                    <p className="text-lg font-bold text-gray-900">${totalCosts.toFixed(2)}</p>
+                  </div>
+                );
+              })()}
             </CardContent>
           </Card>
 

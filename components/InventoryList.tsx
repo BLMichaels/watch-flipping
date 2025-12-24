@@ -25,6 +25,8 @@ interface InventoryListProps {
   onEditWatch: (id: string) => void;
   onDeleteWatch: (id: string) => void;
   onAnalyzeWatch: (id: string) => void;
+  onBulkStatusUpdate?: (ids: string[], status: string) => Promise<void>;
+  onBulkDelete?: (ids: string[]) => Promise<void>;
 }
 
 type SortField = 'brand' | 'purchasePrice' | 'profit' | 'recommendation' | 'purchaseDate' | 'roi';
@@ -36,6 +38,8 @@ export function InventoryList({
   onEditWatch,
   onDeleteWatch,
   onAnalyzeWatch,
+  onBulkStatusUpdate,
+  onBulkDelete,
 }: InventoryListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState<SortField>('brand');
@@ -43,6 +47,8 @@ export function InventoryList({
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [brandFilter, setBrandFilter] = useState<string>('all');
   const [showOnlyProfitable, setShowOnlyProfitable] = useState(false);
+  const [selectedWatches, setSelectedWatches] = useState<Set<string>>(new Set());
+  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
 
   const getBestProfit = (watch: Watch) => {
     const bestRevenue = watch.revenueServiced || watch.revenueCleaned || watch.revenueAsIs || 0;
@@ -57,6 +63,8 @@ export function InventoryList({
         return 'bg-yellow-100 text-yellow-800';
       case 'problem_item':
         return 'bg-red-100 text-red-800';
+      case 'sold':
+        return 'bg-blue-100 text-blue-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
@@ -70,6 +78,8 @@ export function InventoryList({
         return 'Needs Service';
       case 'problem_item':
         return 'Problem Item';
+      case 'sold':
+        return 'Sold';
       default:
         return status;
     }
@@ -89,7 +99,9 @@ export function InventoryList({
         const bestRevenue = watch.revenueServiced || watch.revenueCleaned || watch.revenueAsIs || 0;
         return bestRevenue > watch.purchasePrice;
       })();
-      return matchesSearch && matchesStatus && matchesBrand && matchesProfitable;
+      const matchesPriceRange = (!priceRange.min || watch.purchasePrice >= parseFloat(priceRange.min)) &&
+                                (!priceRange.max || watch.purchasePrice <= parseFloat(priceRange.max));
+      return matchesSearch && matchesStatus && matchesBrand && matchesProfitable && matchesPriceRange;
     });
 
     filtered.sort((a, b) => {
@@ -133,7 +145,7 @@ export function InventoryList({
     });
 
     return filtered;
-  }, [watches, searchTerm, sortField, sortDirection, statusFilter, brandFilter, showOnlyProfitable]);
+  }, [watches, searchTerm, sortField, sortDirection, statusFilter, brandFilter, showOnlyProfitable, priceRange]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -142,6 +154,39 @@ export function InventoryList({
       setSortField(field);
       setSortDirection('asc');
     }
+  };
+
+  const toggleWatchSelection = (id: string) => {
+    setSelectedWatches(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
+
+  const selectAll = () => {
+    if (selectedWatches.size === filteredAndSortedWatches.length) {
+      setSelectedWatches(new Set());
+    } else {
+      setSelectedWatches(new Set(filteredAndSortedWatches.map(w => w.id)));
+    }
+  };
+
+  const handleBulkStatusUpdate = async (status: string) => {
+    if (selectedWatches.size === 0 || !onBulkStatusUpdate) return;
+    await onBulkStatusUpdate(Array.from(selectedWatches), status);
+    setSelectedWatches(new Set());
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedWatches.size === 0 || !onBulkDelete) return;
+    if (!confirm(`Delete ${selectedWatches.size} watch(es)?`)) return;
+    await onBulkDelete(Array.from(selectedWatches));
+    setSelectedWatches(new Set());
   };
 
   return (
@@ -216,6 +261,7 @@ export function InventoryList({
               <option value="ready_to_sell">Ready to Sell</option>
               <option value="needs_service">Needs Service</option>
               <option value="problem_item">Problem Item</option>
+              <option value="sold">Sold</option>
             </select>
             <select
               value={brandFilter}
@@ -241,6 +287,14 @@ export function InventoryList({
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-200">
+                  <th className="text-left py-3 px-4 font-semibold text-gray-700 w-12">
+                    <input
+                      type="checkbox"
+                      checked={selectedWatches.size === filteredAndSortedWatches.length && filteredAndSortedWatches.length > 0}
+                      onChange={selectAll}
+                      className="rounded"
+                    />
+                  </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-700">
                     <button
                       onClick={() => handleSort('brand')}
@@ -294,7 +348,7 @@ export function InventoryList({
               <tbody>
                 {filteredAndSortedWatches.length === 0 ? (
                   <tr>
-                    <td colSpan={8} className="py-8 text-center text-gray-500">
+                    <td colSpan={9} className="py-8 text-center text-gray-500">
                       No watches found. {searchTerm || statusFilter !== 'all' || brandFilter !== 'all' || showOnlyProfitable
                         ? 'Try adjusting your filters.'
                         : 'Add your first watch to get started!'}
@@ -303,6 +357,14 @@ export function InventoryList({
                 ) : (
                   filteredAndSortedWatches.map((watch: Watch) => (
                     <tr key={watch.id} className="border-b border-gray-100 hover:bg-gray-50">
+                      <td className="py-3 px-4">
+                        <input
+                          type="checkbox"
+                          checked={selectedWatches.has(watch.id)}
+                          onChange={() => toggleWatchSelection(watch.id)}
+                          className="rounded"
+                        />
+                      </td>
                       <td className="py-3 px-4">{watch.brand}</td>
                       <td className="py-3 px-4">{watch.model}</td>
                       <td className="py-3 px-4">${watch.purchasePrice.toLocaleString()}</td>

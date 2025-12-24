@@ -25,6 +25,12 @@ interface Watch {
   status: string;
   conditionNotes?: string | null;
   notes?: string | null;
+  tags?: string[];
+  serviceCost?: number | null;
+  cleaningCost?: number | null;
+  otherCosts?: number | null;
+  soldDate?: string | null;
+  soldPrice?: number | null;
   images: string[];
   ebayUrl?: string | null;
   ebayListingId?: string | null;
@@ -230,6 +236,34 @@ export default function Home() {
             onEditWatch={handleEditWatch}
             onDeleteWatch={handleDeleteWatch}
             onAnalyzeWatch={handleAnalyzeWatch}
+            onBulkStatusUpdate={async (ids, status) => {
+              try {
+                await Promise.all(ids.map(id => {
+                  const watch = watches.find(w => w.id === id);
+                  if (!watch) return Promise.resolve();
+                  return fetch(`/api/watches/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...watch, status }),
+                  });
+                }));
+                await fetchWatches();
+              } catch (error) {
+                console.error('Error updating statuses:', error);
+                alert('Failed to update statuses');
+              }
+            }}
+            onBulkDelete={async (ids) => {
+              try {
+                await Promise.all(ids.map(id => 
+                  fetch(`/api/watches/${id}`, { method: 'DELETE' })
+                ));
+                await fetchWatches();
+              } catch (error) {
+                console.error('Error deleting watches:', error);
+                alert('Failed to delete watches');
+              }
+            }}
           />
           <div className="fixed bottom-6 right-6">
             <button

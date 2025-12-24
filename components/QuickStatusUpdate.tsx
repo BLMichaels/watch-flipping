@@ -13,6 +13,7 @@ export function QuickStatusUpdate({ currentStatus, onStatusChange }: QuickStatus
     { value: 'ready_to_sell', label: 'Ready to Sell', icon: CheckCircle, color: 'green' },
     { value: 'needs_service', label: 'Needs Service', icon: AlertCircle, color: 'yellow' },
     { value: 'problem_item', label: 'Problem Item', icon: XCircle, color: 'red' },
+    { value: 'sold', label: 'Sold', icon: CheckCircle, color: 'blue' },
   ];
 
   return (

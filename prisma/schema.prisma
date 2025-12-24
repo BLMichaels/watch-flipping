@@ -26,9 +26,19 @@ model Watch {
   revenueServiced   Float?   // Basic case with full service
   
   // Status and condition
-  status            String   @default("needs_service") // ready_to_sell, needs_service, problem_item
+  status            String   @default("needs_service") // ready_to_sell, needs_service, problem_item, sold
   conditionNotes    String?
   notes             String?  // General notes/observations
+  tags              String[] // Tags for categorization
+  
+  // Sale tracking
+  soldDate          DateTime?
+  soldPrice         Float?
+  
+  // Cost tracking
+  serviceCost       Float?   // Cost of service/repair
+  cleaningCost      Float?   // Cost of cleaning
+  otherCosts        Float?   // Other expenses
   
   // Images
   images            String[] // Array of image URLs

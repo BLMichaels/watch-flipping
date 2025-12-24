@@ -73,6 +73,19 @@ export function Dashboard({ watches, onAddWatch, onViewInventory }: DashboardPro
     return acc;
   }, {} as Record<string, number>);
 
+  // Profit by brand
+  const profitByBrand = watches.reduce((acc, watch) => {
+    const bestRevenue = watch.revenueServiced || watch.revenueCleaned || watch.revenueAsIs || 0;
+    const profit = bestRevenue - watch.purchasePrice;
+    acc[watch.brand] = (acc[watch.brand] || 0) + profit;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const profitByBrandData = Object.entries(profitByBrand)
+    .map(([name, value]) => ({ name, value }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 5); // Top 5 brands
+
   const pieData = Object.entries(brandData).map(([name, value]: [string, number]) => ({
     name,
     value,
@@ -331,6 +344,23 @@ export function Dashboard({ watches, onAddWatch, onViewInventory }: DashboardPro
                   <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
                   <Line type="monotone" dataKey="profit" stroke="#00C49F" strokeWidth={2} />
                 </LineChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Profit by Brand (Top 5)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={profitByBrandData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
+                  <Bar dataKey="value" fill="#0088FE" />
+                </BarChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
