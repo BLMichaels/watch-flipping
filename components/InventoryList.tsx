@@ -3,8 +3,11 @@
 import { useState, useMemo } from 'react';
 import { Card } from './ui/Card';
 import { Button } from './ui/Button';
-import { Eye, Edit, Trash2, Search, ArrowUpDown } from 'lucide-react';
+import { Eye, Edit, Trash2, Search, ArrowUpDown, GitCompare } from 'lucide-react';
 import { ExportButton } from './ExportButton';
+import { WatchComparison } from './WatchComparison';
+import { QuickStats } from './QuickStats';
+import { FilterPresets } from './FilterPresets';
 
 interface Watch {
   id: string;
@@ -52,6 +55,8 @@ export function InventoryList({
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
   const [tagFilter, setTagFilter] = useState<string>('');
+  const [showComparison, setShowComparison] = useState(false);
+  const [activePreset, setActivePreset] = useState<string>('');
 
   const getBestProfit = (watch: Watch) => {
     const bestRevenue = watch.revenueServiced || watch.revenueCleaned || watch.revenueAsIs || 0;
@@ -193,6 +198,14 @@ export function InventoryList({
     if (!confirm(`Delete ${selectedWatches.size} watch(es)?`)) return;
     await onBulkDelete(Array.from(selectedWatches));
     setSelectedWatches(new Set());
+  };
+
+  const handleCompare = () => {
+    if (selectedWatches.size >= 2) {
+      setShowComparison(true);
+    } else {
+      alert('Please select at least 2 watches to compare');
+    }
   };
 
   return (

@@ -7,6 +7,7 @@ import { WatchDetail } from '@/components/WatchDetail';
 import { AddWatchForm } from '@/components/AddWatchForm';
 import { Navigation } from '@/components/Navigation';
 import { SummaryReport } from '@/components/SummaryReport';
+import { KeyboardShortcuts } from '@/components/KeyboardShortcuts';
 
 type View = 'dashboard' | 'inventory' | 'watch-detail' | 'add-watch' | 'edit-watch' | 'summary';
 
@@ -206,6 +207,11 @@ export default function Home() {
 
   return (
     <div>
+      <KeyboardShortcuts
+        onAddWatch={handleAddWatch}
+        onViewInventory={handleViewInventory}
+        onViewDashboard={() => setView('dashboard')}
+      />
       <Navigation
         currentView={view}
         onNavigate={(newView) => {
