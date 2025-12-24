@@ -9,6 +9,7 @@ import { WatchComparison } from './WatchComparison';
 import { QuickStats } from './QuickStats';
 import { FilterPresets } from './FilterPresets';
 import { AdvancedSearch } from './AdvancedSearch';
+import { EmptyState } from './EmptyState';
 
 interface Watch {
   id: string;
@@ -32,6 +33,7 @@ interface InventoryListProps {
   onAnalyzeWatch: (id: string) => void;
   onBulkStatusUpdate?: (ids: string[], status: string) => Promise<void>;
   onBulkDelete?: (ids: string[]) => Promise<void>;
+  onAddWatch?: () => void;
 }
 
 type SortField = 'brand' | 'purchasePrice' | 'profit' | 'recommendation' | 'purchaseDate' | 'roi';
@@ -45,6 +47,7 @@ export function InventoryList({
   onAnalyzeWatch,
   onBulkStatusUpdate,
   onBulkDelete,
+  onAddWatch,
 }: InventoryListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState<SortField>('brand');

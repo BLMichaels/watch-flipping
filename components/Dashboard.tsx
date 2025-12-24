@@ -8,6 +8,7 @@ import { TrendingUp, DollarSign, Package, Percent, Clock, CheckCircle, AlertCirc
 import { ExportButton } from './ExportButton';
 import { ProfitCalculator } from './ProfitCalculator';
 import { WatchReminders } from './WatchReminders';
+import { PerformanceMetrics } from './PerformanceMetrics';
 
 interface Watch {
   id: string;

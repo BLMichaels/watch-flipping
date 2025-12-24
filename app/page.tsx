@@ -8,6 +8,7 @@ import { AddWatchForm } from '@/components/AddWatchForm';
 import { Navigation } from '@/components/Navigation';
 import { SummaryReport } from '@/components/SummaryReport';
 import { KeyboardShortcuts } from '@/components/KeyboardShortcuts';
+import { useToast, ToastContainer } from '@/components/Toast';
 
 type View = 'dashboard' | 'inventory' | 'watch-detail' | 'add-watch' | 'edit-watch' | 'summary';
 
@@ -181,10 +182,13 @@ export default function Home() {
             setSelectedWatch(updatedWatch);
           }
         }
+        showToast('Status updated successfully', 'success');
+      } else {
+        showToast('Failed to update status', 'error');
       }
     } catch (error) {
       console.error('Error updating status:', error);
-      alert('Failed to update status');
+      showToast('Failed to update status', 'error');
     }
   };
 
@@ -265,11 +269,13 @@ export default function Home() {
                   fetch(`/api/watches/${id}`, { method: 'DELETE' })
                 ));
                 await fetchWatches();
+                showToast(`${ids.length} watch(es) deleted successfully`, 'success');
               } catch (error) {
                 console.error('Error deleting watches:', error);
-                alert('Failed to delete watches');
+                showToast('Failed to delete watches', 'error');
               }
             }}
+            onAddWatch={handleAddWatch}
           />
           <div className="fixed bottom-6 right-6">
             <button
