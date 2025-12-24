@@ -3,16 +3,18 @@
 import { Button } from './ui/Button';
 import { Download } from 'lucide-react';
 
+// Flexible Watch interface to work with different component types
 interface Watch {
   id: string;
   brand: string;
-  model: string;
   purchasePrice: number;
   revenueAsIs: number | null;
   revenueCleaned: number | null;
   revenueServiced: number | null;
   status: string;
-  purchaseDate: string;
+  model?: string;
+  purchaseDate?: string;
+  [key: string]: any; // Allow additional properties
 }
 
 interface ExportButtonProps {
@@ -43,7 +45,7 @@ export function ExportButton({ watches }: ExportButtonProps) {
 
       return [
         watch.brand,
-        watch.model,
+        watch.model || '',
         watch.purchasePrice.toFixed(2),
         watch.revenueAsIs?.toFixed(2) || '',
         watch.revenueCleaned?.toFixed(2) || '',
@@ -51,7 +53,7 @@ export function ExportButton({ watches }: ExportButtonProps) {
         profit.toFixed(2),
         roi.toFixed(1),
         watch.status,
-        new Date(watch.purchaseDate).toLocaleDateString(),
+        watch.purchaseDate ? new Date(watch.purchaseDate).toLocaleDateString() : '',
       ];
     });
 
