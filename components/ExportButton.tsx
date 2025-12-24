@@ -77,9 +77,9 @@ export function ExportButton({ watches, label = 'Export CSV' }: ExportButtonProp
   };
 
   return (
-    <Button variant="secondary" onClick={exportToCSV}>
+    <Button variant="secondary" size="sm" onClick={exportToCSV}>
       <Download className="h-4 w-4 mr-2" />
-      Export to CSV
+      {label || 'Export CSV'}
     </Button>
   );
 }

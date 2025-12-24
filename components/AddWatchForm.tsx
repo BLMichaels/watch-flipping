@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from './ui/Card';
 import { Button } from './ui/Button';
-import { X } from 'lucide-react';
+import { X, FileText } from 'lucide-react';
+import { WatchTemplates } from './WatchTemplates';
 
 interface AddWatchFormProps {
   onSave: (watch: any) => Promise<void>;
@@ -14,6 +15,7 @@ interface AddWatchFormProps {
 export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProps) {
   const [isScraping, setIsScraping] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showTemplates, setShowTemplates] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const [formData, setFormData] = useState({
     ebayUrl: '',
@@ -140,13 +142,39 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
     }));
   };
 
+  const handleTemplateSelect = (template: { brand: string; model: string; tags: string[] }) => {
+    setFormData((prev) => ({
+      ...prev,
+      brand: template.brand,
+      model: template.model,
+      tagsInput: template.tags.join(', '),
+    }));
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">
-            {initialData ? 'Edit Watch' : 'Add New Watch'}
-          </h1>
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">
+              {initialData ? 'Edit Watch' : 'Add New Watch'}
+            </h1>
+            <p className="text-gray-600 mt-1">
+              {initialData
+                ? 'Update watch information below.'
+                : 'Fill in the details below or use a template to get started.'}
+            </p>
+          </div>
+          {!initialData && (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setShowTemplates(true)}
+            >
+              <FileText className="h-4 w-4 mr-2" />
+              Use Template
+            </Button>
+          )}
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -502,6 +530,12 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
           </div>
         </form>
       </div>
+      {showTemplates && (
+        <WatchTemplates
+          onSelectTemplate={handleTemplateSelect}
+          onClose={() => setShowTemplates(false)}
+        />
+      )}
     </div>
   );
 }
