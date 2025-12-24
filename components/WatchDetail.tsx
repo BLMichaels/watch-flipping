@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from './ui/Card';
 import { Button } from './ui/Button';
 import { ArrowLeft, Edit, Trash2, X } from 'lucide-react';
+import { QuickStatusUpdate } from './QuickStatusUpdate';
 
 interface Watch {
   id: string;
@@ -34,6 +35,7 @@ interface WatchDetailProps {
   onDelete: () => void;
   onImageUpload: (watchId: string, file: File) => Promise<void>;
   onImageDelete: (watchId: string, imageUrl: string) => Promise<void>;
+  onStatusChange?: (watchId: string, status: string) => Promise<void>;
 }
 
 export function WatchDetail({
@@ -43,6 +45,7 @@ export function WatchDetail({
   onDelete,
   onImageUpload,
   onImageDelete,
+  onStatusChange,
 }: WatchDetailProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -90,6 +93,20 @@ export function WatchDetail({
               {watch.referenceNumber && (
                 <p className="text-gray-600 mt-1">Ref: {watch.referenceNumber}</p>
               )}
+              <div className="flex items-center gap-3 mt-2">
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
+                    watch.status
+                  )}`}
+                >
+                  {getStatusLabel(watch.status)}
+                </span>
+                {watch.purchaseDate && (
+                  <span className="text-sm text-gray-500">
+                    Purchased: {new Date(watch.purchaseDate).toLocaleDateString()}
+                  </span>
+                )}
+              </div>
             </div>
             <div className="flex gap-2">
               <Button variant="secondary" onClick={onEdit}>
@@ -240,6 +257,21 @@ export function WatchDetail({
 
           {/* Sidebar */}
           <div className="space-y-6">
+            {/* Quick Status Update */}
+            {onStatusChange && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Quick Status Update</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <QuickStatusUpdate
+                    currentStatus={watch.status}
+                    onStatusChange={(status) => onStatusChange(watch.id, status)}
+                  />
+                </CardContent>
+              </Card>
+            )}
+
             {/* Financial Summary */}
             <Card>
               <CardHeader>

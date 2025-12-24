@@ -150,6 +150,36 @@ export default function Home() {
     alert('Image deletion is temporarily disabled');
   };
 
+  const handleStatusChange = async (watchId: string, status: string) => {
+    try {
+      const watch = watches.find(w => w.id === watchId);
+      if (!watch) return;
+
+      const response = await fetch(`/api/watches/${watchId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...watch,
+          status,
+        }),
+      });
+
+      if (response.ok) {
+        await fetchWatches();
+        if (selectedWatch?.id === watchId) {
+          const watchResponse = await fetch(`/api/watches/${watchId}`);
+          if (watchResponse.ok) {
+            const updatedWatch = await watchResponse.json();
+            setSelectedWatch(updatedWatch);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error updating status:', error);
+      alert('Failed to update status');
+    }
+  };
+
   const handleAnalyzeWatch = async (id: string) => {
     alert('AI analysis is temporarily disabled');
   };
@@ -218,6 +248,7 @@ export default function Home() {
             onDelete={() => handleDeleteWatch(selectedWatch.id)}
             onImageUpload={handleImageUpload}
             onImageDelete={handleImageDelete}
+            onStatusChange={handleStatusChange}
           />
         </div>
       )}

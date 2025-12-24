@@ -41,6 +41,7 @@ export function InventoryList({
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [brandFilter, setBrandFilter] = useState<string>('all');
+  const [showOnlyProfitable, setShowOnlyProfitable] = useState(false);
 
   const getBestProfit = (watch: Watch) => {
     const bestRevenue = watch.revenueServiced || watch.revenueCleaned || watch.revenueAsIs || 0;
@@ -83,7 +84,11 @@ export function InventoryList({
         watch.model.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesStatus = statusFilter === 'all' || watch.status === statusFilter;
       const matchesBrand = brandFilter === 'all' || watch.brand === brandFilter;
-      return matchesSearch && matchesStatus && matchesBrand;
+      const matchesProfitable = !showOnlyProfitable || (() => {
+        const bestRevenue = watch.revenueServiced || watch.revenueCleaned || watch.revenueAsIs || 0;
+        return bestRevenue > watch.purchasePrice;
+      })();
+      return matchesSearch && matchesStatus && matchesBrand && matchesProfitable;
     });
 
     filtered.sort((a, b) => {
@@ -117,7 +122,7 @@ export function InventoryList({
     });
 
     return filtered;
-  }, [watches, searchTerm, sortField, sortDirection, statusFilter, brandFilter]);
+  }, [watches, searchTerm, sortField, sortDirection, statusFilter, brandFilter, showOnlyProfitable]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {

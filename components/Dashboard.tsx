@@ -123,7 +123,7 @@ export function Dashboard({ watches, onAddWatch, onViewInventory }: DashboardPro
         </div>
 
         {/* Quick Actions */}
-        <div className="mb-6 flex gap-4 items-center">
+        <div className="mb-6 flex gap-4 items-center flex-wrap">
           <Button onClick={onAddWatch} size="lg">
             Add New Watch
           </Button>
@@ -132,6 +132,23 @@ export function Dashboard({ watches, onAddWatch, onViewInventory }: DashboardPro
           </Button>
           <ExportButton watches={watches} />
         </div>
+
+        {/* Summary Alert */}
+        {watches.length === 0 && (
+          <Card className="mb-6 border-blue-200 bg-blue-50">
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <p className="text-lg font-semibold text-blue-900 mb-2">Get Started</p>
+                <p className="text-blue-700 mb-4">
+                  You don't have any watches yet. Add your first watch to start tracking your portfolio!
+                </p>
+                <Button onClick={onAddWatch}>
+                  Add Your First Watch
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Key Metrics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
