@@ -380,13 +380,15 @@ export function InventoryList({
                     </button>
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-700">
-                    <button
-                      onClick={() => handleSort('roi')}
-                      className="flex items-center gap-2 hover:text-gray-900"
-                    >
-                      ROI %
-                      <ArrowUpDown className="h-4 w-4" />
-                    </button>
+                    <Tooltip content="Return on Investment percentage - (Profit / Purchase Price) × 100">
+                      <button
+                        onClick={() => handleSort('roi')}
+                        className="flex items-center gap-2 hover:text-gray-900"
+                      >
+                        ROI %
+                        <ArrowUpDown className="h-4 w-4" />
+                      </button>
+                    </Tooltip>
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-700">Status</th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-700">
