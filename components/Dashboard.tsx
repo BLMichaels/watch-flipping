@@ -7,6 +7,7 @@ import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Toolti
 import { TrendingUp, DollarSign, Package, Percent, Clock, CheckCircle, AlertCircle } from 'lucide-react';
 import { ExportButton } from './ExportButton';
 import { ProfitCalculator } from './ProfitCalculator';
+import { WatchReminders } from './WatchReminders';
 
 interface Watch {
   id: string;
@@ -329,6 +330,9 @@ export function Dashboard({ watches, onAddWatch, onViewInventory }: DashboardPro
             </CardContent>
           </Card>
         </div>
+
+        {/* Reminders */}
+        <WatchReminders watches={watches} />
 
         {/* Profit Calculator */}
         <div className="mb-6">

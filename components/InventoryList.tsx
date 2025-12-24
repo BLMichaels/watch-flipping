@@ -8,6 +8,7 @@ import { ExportButton } from './ExportButton';
 import { WatchComparison } from './WatchComparison';
 import { QuickStats } from './QuickStats';
 import { FilterPresets } from './FilterPresets';
+import { AdvancedSearch } from './AdvancedSearch';
 
 interface Watch {
   id: string;
@@ -57,6 +58,7 @@ export function InventoryList({
   const [tagFilter, setTagFilter] = useState<string>('');
   const [showComparison, setShowComparison] = useState(false);
   const [activePreset, setActivePreset] = useState<string>('');
+  const [advancedSearchCriteria, setAdvancedSearchCriteria] = useState<any>(null);
 
   const getBestProfit = (watch: Watch) => {
     const bestRevenue = watch.revenueServiced || watch.revenueCleaned || watch.revenueAsIs || 0;
@@ -156,7 +158,7 @@ export function InventoryList({
     });
 
     return filtered;
-  }, [watches, searchTerm, sortField, sortDirection, statusFilter, brandFilter, showOnlyProfitable, priceRange, dateRange, tagFilter]);
+  }, [watches, searchTerm, sortField, sortDirection, statusFilter, brandFilter, showOnlyProfitable, priceRange, dateRange, tagFilter, advancedSearchCriteria]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -259,7 +261,8 @@ export function InventoryList({
         </div>
 
         <QuickStats watches={watches} />
-        <FilterPresets
+        <div className="mb-4 flex items-center justify-between">
+          <FilterPresets
           onApplyPreset={(preset) => {
             setActivePreset(preset.id);
             if (preset.filters.status) setStatusFilter(preset.filters.status);
