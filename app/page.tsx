@@ -144,11 +144,11 @@ export default function Home() {
         setSelectedWatch(null);
       } else {
         const error = await response.json();
-        alert(error.error || 'Failed to save watch');
+        showToast(error.error || 'Failed to save watch', 'error');
       }
     } catch (error) {
       console.error('Error saving watch:', error);
-      alert('Failed to save watch');
+      showToast('Failed to save watch', 'error');
     }
   };
 
@@ -260,9 +260,10 @@ export default function Home() {
                   });
                 }));
                 await fetchWatches();
+                showToast(`${ids.length} watch(es) updated successfully`, 'success');
               } catch (error) {
                 console.error('Error updating statuses:', error);
-                alert('Failed to update statuses');
+                showToast('Failed to update statuses', 'error');
               }
             }}
             onBulkDelete={async (ids) => {
