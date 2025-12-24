@@ -349,7 +349,7 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-4 gap-4">
-                  {formData.images.map((imageUrl, index) => (
+                  {formData.images.map((imageUrl: string, index: number) => (
                     <div key={index} className="relative group">
                       <div className="aspect-square bg-gray-200 rounded-lg overflow-hidden">
                         <img
