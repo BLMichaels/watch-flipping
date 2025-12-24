@@ -141,15 +141,6 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
     }));
   };
 
-  const handleTemplateSelect = (template: { brand: string; model: string; tags: string[] }) => {
-    setFormData((prev) => ({
-      ...prev,
-      brand: template.brand,
-      model: template.model,
-      tagsInput: template.tags.join(', '),
-    }));
-  };
-
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-4xl mx-auto">
