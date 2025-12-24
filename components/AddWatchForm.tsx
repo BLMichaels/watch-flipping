@@ -96,8 +96,9 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
 
       // Show analysis results
       alert(`AI Recommendation: ${analysis.recommendation.toUpperCase()}\n\n${analysis.explanation}`);
-    } catch (error: any) {
-      alert(error.message || 'Failed to analyze watch');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to analyze watch';
+      alert(errorMessage);
     } finally {
       setIsAnalyzing(false);
     }
