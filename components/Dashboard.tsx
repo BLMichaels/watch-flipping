@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from './ui/Card';
 import { Button } from './ui/Button';
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { TrendingUp, DollarSign, Package, Percent, Clock, CheckCircle, AlertCircle } from 'lucide-react';
 import { ExportButton } from './ExportButton';
 import { ProfitCalculator } from './ProfitCalculator';
@@ -317,7 +317,7 @@ export function Dashboard({ watches, onAddWatch, onViewInventory, onExport }: Da
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <RechartsTooltip />
                 </PieChart>
               </ResponsiveContainer>
             </CardContent>
@@ -333,7 +333,7 @@ export function Dashboard({ watches, onAddWatch, onViewInventory, onExport }: Da
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="scenario" />
                   <YAxis />
-                  <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
+                  <RechartsTooltip formatter={(value) => `$${value.toLocaleString()}`} />
                   <Bar dataKey="revenue" fill="#0088FE" />
                 </BarChart>
               </ResponsiveContainer>
@@ -370,7 +370,7 @@ export function Dashboard({ watches, onAddWatch, onViewInventory, onExport }: Da
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="watch" />
                   <YAxis />
-                  <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
+                  <RechartsTooltip formatter={(value) => `$${value.toLocaleString()}`} />
                   <Line type="monotone" dataKey="profit" stroke="#00C49F" strokeWidth={2} />
                 </LineChart>
               </ResponsiveContainer>
@@ -387,7 +387,7 @@ export function Dashboard({ watches, onAddWatch, onViewInventory, onExport }: Da
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
-                  <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
+                  <RechartsTooltip formatter={(value) => `$${value.toLocaleString()}`} />
                   <Bar dataKey="value" fill="#0088FE" />
                 </BarChart>
               </ResponsiveContainer>
