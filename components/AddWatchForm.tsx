@@ -120,7 +120,7 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
   const removeImage = (index: number) => {
     setFormData((prev) => ({
       ...prev,
-      images: prev.images.filter((_, i) => i !== index),
+      images: prev.images.filter((_: string, i: number) => i !== index),
     }));
   };
 
