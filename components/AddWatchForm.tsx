@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from './ui/Card';
 import { Button } from './ui/Button';
-import { Loader2, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
 interface AddWatchFormProps {
   onSave: (watch: any) => Promise<void>;
@@ -13,7 +13,6 @@ interface AddWatchFormProps {
 
 export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProps) {
   const [isScraping, setIsScraping] = useState(false);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [formData, setFormData] = useState({
     ebayUrl: '',
     brand: initialData?.brand || '',

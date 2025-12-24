@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from './ui/Card';
 import { Button } from './ui/Button';
-import { ArrowLeft, Edit, Trash2, Upload, X } from 'lucide-react';
+import { ArrowLeft, Edit, Trash2, X } from 'lucide-react';
 
 interface Watch {
   id: string;
@@ -44,20 +44,6 @@ export function WatchDetail({
   onImageDelete,
 }: WatchDetailProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
-
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploading(true);
-    try {
-      await onImageUpload(watch.id, file);
-    } finally {
-      setUploading(false);
-      e.target.value = ''; // Reset input
-    }
-  };
 
   const getStatusColor = (status: string) => {
     switch (status) {

@@ -5,7 +5,6 @@ import { Dashboard } from '@/components/Dashboard';
 import { InventoryList } from '@/components/InventoryList';
 import { WatchDetail } from '@/components/WatchDetail';
 import { AddWatchForm } from '@/components/AddWatchForm';
-import { AIAnalysisPanel } from '@/components/AIAnalysisPanel';
 import { Navigation } from '@/components/Navigation';
 
 type View = 'dashboard' | 'inventory' | 'watch-detail' | 'add-watch' | 'edit-watch';
