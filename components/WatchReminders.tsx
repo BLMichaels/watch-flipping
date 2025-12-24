@@ -6,7 +6,7 @@ import { Bell, Clock, CheckCircle } from 'lucide-react';
 interface Watch {
   id: string;
   brand: string;
-  model: string;
+  model?: string;
   status: string;
   notes?: string | null;
   purchaseDate?: string;
@@ -79,7 +79,7 @@ export function WatchReminders({ watches }: WatchRemindersProps) {
               <ul className="mt-2 space-y-1">
                 {needsAttention.slice(0, 3).map((watch) => (
                   <li key={watch.id} className="text-xs text-yellow-800">
-                    • {watch.brand} {watch.model}
+                    • {watch.brand} {watch.model || ''}
                   </li>
                 ))}
                 {needsAttention.length > 3 && (
