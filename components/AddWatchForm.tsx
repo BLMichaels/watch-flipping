@@ -112,7 +112,7 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
       revenueServiced: formData.revenueServiced ? parseFloat(formData.revenueServiced.toString()) : null,
       ebayUrl: formData.ebayUrl || null,
       notes: formData.notes || null,
-      tags: formData.tagsInput ? formData.tagsInput.split(',').map(t => t.trim()).filter(t => t) : [],
+      tags: formData.tagsInput ? formData.tagsInput.split(',').map((t: string) => t.trim()).filter((t: string) => t) : [],
       serviceCost: formData.serviceCost ? parseFloat(formData.serviceCost.toString()) : null,
       cleaningCost: formData.cleaningCost ? parseFloat(formData.cleaningCost.toString()) : null,
       otherCosts: formData.otherCosts ? parseFloat(formData.otherCosts.toString()) : null,
