@@ -20,26 +20,28 @@ const nextConfig = {
   },
   // Fix for cheerio/undici compatibility with Next.js
   webpack: (config, { isServer, webpack }) => {
-    // Only apply to server-side builds
-    if (isServer) {
-      // Externalize undici to avoid build issues
-      config.externals = config.externals || [];
-      config.externals.push({
-        'undici': 'commonjs undici',
-        'cheerio': 'commonjs cheerio',
-      });
-    } else {
-      // For client-side, ignore these packages completely
+    if (!isServer) {
+      // For client-side builds, completely ignore these packages
       config.resolve.fallback = {
         ...config.resolve.fallback,
         'undici': false,
         'cheerio': false,
+        'htmlparser2': false,
+        'domutils': false,
+        'css-select': false,
       };
+    }
+    // For server-side, use externals
+    if (isServer) {
+      config.externals = config.externals || [];
+      config.externals.push({
+        'undici': 'commonjs undici',
+      });
     }
     return config;
   },
   // Ensure server-side only packages are handled correctly
-  serverExternalPackages: ['cheerio', 'undici'],
+  serverExternalPackages: ['cheerio', 'undici', 'htmlparser2', 'domutils', 'css-select'],
 }
 
 module.exports = nextConfig

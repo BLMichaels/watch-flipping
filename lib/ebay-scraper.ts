@@ -1,5 +1,6 @@
-import * as cheerio from 'cheerio';
-import axios from 'axios';
+// Use require for cheerio to avoid bundling issues
+const cheerio = require('cheerio');
+const axios = require('axios');
 
 export interface eBayListingData {
   title: string;
