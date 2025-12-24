@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { scrapeeBayListing } from '@/lib/ebay-scraper';
+
+// Dynamic import to ensure server-side only
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest) {
+  // Dynamic import of cheerio to avoid build issues
+  const { scrapeeBayListing } = await import('@/lib/ebay-scraper');
   try {
     const { url } = await request.json();
     

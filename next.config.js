@@ -19,12 +19,22 @@ const nextConfig = {
     ];
   },
   // Fix for cheerio/undici compatibility with Next.js
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, webpack }) => {
     // Only apply to server-side builds
     if (isServer) {
       // Externalize undici to avoid build issues
       config.externals = config.externals || [];
-      config.externals.push('undici');
+      config.externals.push({
+        'undici': 'commonjs undici',
+        'cheerio': 'commonjs cheerio',
+      });
+    } else {
+      // For client-side, ignore these packages completely
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        'undici': false,
+        'cheerio': false,
+      };
     }
     return config;
   },
