@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from './ui/Card';
 import { Button } from './ui/Button';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { TrendingUp, DollarSign, Package, Percent, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { ExportButton } from './ExportButton';
 
 interface Watch {
   id: string;
@@ -104,6 +105,15 @@ export function Dashboard({ watches, onAddWatch, onViewInventory }: DashboardPro
     ? (metrics.readyToSell / watches.length) * 100
     : 0;
 
+  // Calculate additional stats
+  const totalWatches = watches.length;
+  const watchesWithRevenue = watches.filter(w => 
+    w.revenueAsIs || w.revenueCleaned || w.revenueServiced
+  ).length;
+  const avgPurchasePrice = totalWatches > 0
+    ? watches.reduce((sum, w) => sum + w.purchasePrice, 0) / totalWatches
+    : 0;
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -113,13 +123,14 @@ export function Dashboard({ watches, onAddWatch, onViewInventory }: DashboardPro
         </div>
 
         {/* Quick Actions */}
-        <div className="mb-6 flex gap-4">
+        <div className="mb-6 flex gap-4 items-center">
           <Button onClick={onAddWatch} size="lg">
             Add New Watch
           </Button>
           <Button onClick={onViewInventory} variant="secondary" size="lg">
             View Inventory
           </Button>
+          <ExportButton watches={watches} />
         </div>
 
         {/* Key Metrics Cards */}
@@ -182,6 +193,60 @@ export function Dashboard({ watches, onAddWatch, onViewInventory }: DashboardPro
                   </p>
                 </div>
                 <Package className="h-8 w-8 text-blue-600" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Additional Stats Row */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Total Watches</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {totalWatches}
+                  </p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {watchesWithRevenue} with revenue data
+                  </p>
+                </div>
+                <Package className="h-8 w-8 text-blue-600" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Average Purchase Price</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    ${avgPurchasePrice.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                  </p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Per watch
+                  </p>
+                </div>
+                <DollarSign className="h-8 w-8 text-blue-600" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Portfolio Health</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {metrics.profitMargin > 0 ? '✓ Profitable' : '⚠ Review'}
+                  </p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {metrics.profitMargin > 0 ? 'Positive margin' : 'Negative margin'}
+                  </p>
+                </div>
+                <TrendingUp className="h-8 w-8 text-blue-600" />
               </div>
             </CardContent>
           </Card>

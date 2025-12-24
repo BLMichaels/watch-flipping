@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { Card } from './ui/Card';
 import { Button } from './ui/Button';
 import { Eye, Edit, Trash2, Search, ArrowUpDown } from 'lucide-react';
+import { ExportButton } from './ExportButton';
 
 interface Watch {
   id: string;
@@ -39,6 +40,7 @@ export function InventoryList({
   const [sortField, setSortField] = useState<SortField>('brand');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [brandFilter, setBrandFilter] = useState<string>('all');
 
   const getBestProfit = (watch: Watch) => {
     const bestRevenue = watch.revenueServiced || watch.revenueCleaned || watch.revenueAsIs || 0;
@@ -72,12 +74,16 @@ export function InventoryList({
   };
 
   const filteredAndSortedWatches = useMemo(() => {
+    // Get unique brands for filter
+    const uniqueBrands = Array.from(new Set(watches.map(w => w.brand))).sort();
+    
     let filtered = watches.filter((watch) => {
       const matchesSearch =
         watch.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
         watch.model.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesStatus = statusFilter === 'all' || watch.status === statusFilter;
-      return matchesSearch && matchesStatus;
+      const matchesBrand = brandFilter === 'all' || watch.brand === brandFilter;
+      return matchesSearch && matchesStatus && matchesBrand;
     });
 
     filtered.sort((a, b) => {
@@ -111,7 +117,7 @@ export function InventoryList({
     });
 
     return filtered;
-  }, [watches, searchTerm, sortField, sortDirection, statusFilter]);
+  }, [watches, searchTerm, sortField, sortDirection, statusFilter, brandFilter]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -125,9 +131,12 @@ export function InventoryList({
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Inventory</h1>
-          <p className="text-gray-600">Manage your watch collection</p>
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Inventory</h1>
+            <p className="text-gray-600">Manage your watch collection</p>
+          </div>
+          <ExportButton watches={watches} />
         </div>
 
         {/* Filters */}
@@ -153,7 +162,22 @@ export function InventoryList({
               <option value="needs_service">Needs Service</option>
               <option value="problem_item">Problem Item</option>
             </select>
+            <select
+              value={brandFilter}
+              onChange={(e) => setBrandFilter(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="all">All Brands</option>
+              {Array.from(new Set(watches.map(w => w.brand))).sort().map((brand) => (
+                <option key={brand} value={brand}>{brand}</option>
+              ))}
+            </select>
           </div>
+          {filteredAndSortedWatches.length !== watches.length && (
+            <div className="mt-2 text-sm text-gray-600">
+              Showing {filteredAndSortedWatches.length} of {watches.length} watches
+            </div>
+          )}
         </Card>
 
         {/* Table */}
