@@ -19,7 +19,7 @@ const nextConfig = {
     ];
   },
   // Fix for cheerio/undici compatibility with Next.js
-  webpack: (config, { isServer, webpack }) => {
+  webpack: (config, { isServer }) => {
     if (!isServer) {
       // For client-side builds, completely ignore these packages
       config.resolve.fallback = {
@@ -29,19 +29,13 @@ const nextConfig = {
         'htmlparser2': false,
         'domutils': false,
         'css-select': false,
+        'axios': false,
       };
-    }
-    // For server-side, use externals
-    if (isServer) {
-      config.externals = config.externals || [];
-      config.externals.push({
-        'undici': 'commonjs undici',
-      });
     }
     return config;
   },
-  // Ensure server-side only packages are handled correctly
-  serverExternalPackages: ['cheerio', 'undici', 'htmlparser2', 'domutils', 'css-select'],
+  // Mark these as external server packages - don't bundle them
+  serverExternalPackages: ['cheerio', 'undici', 'htmlparser2', 'domutils', 'css-select', 'axios'],
 }
 
 module.exports = nextConfig

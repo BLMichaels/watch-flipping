@@ -1,6 +1,14 @@
-// Use require for cheerio to avoid bundling issues
-const cheerio = require('cheerio');
-const axios = require('axios');
+// Lazy load cheerio only when needed to avoid build issues
+let cheerio: any;
+let axios: any;
+
+async function loadDependencies() {
+  if (!cheerio || !axios) {
+    cheerio = await import('cheerio').then(m => m.default || m);
+    axios = await import('axios').then(m => m.default || m);
+  }
+  return { cheerio, axios };
+}
 
 export interface eBayListingData {
   title: string;
@@ -15,14 +23,17 @@ export interface eBayListingData {
 
 export async function scrapeeBayListing(url: string): Promise<eBayListingData> {
   try {
+    // Load dependencies at runtime to avoid build issues
+    const { cheerio: cheerioLib, axios: axiosLib } = await loadDependencies();
+    
     // Fetch the eBay listing page
-    const response = await axios.get(url, {
+    const response = await axiosLib.get(url, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
       },
     });
 
-    const $ = cheerio.load(response.data);
+    const $ = cheerioLib.load(response.data);
     
     // Extract title
     const title = $('#x-item-title-label').text().trim() || 
