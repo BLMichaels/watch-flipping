@@ -9,24 +9,32 @@ import { ExportButton } from './ExportButton';
 import { ProfitCalculator } from './ProfitCalculator';
 import { WatchReminders } from './WatchReminders';
 import { PerformanceMetrics } from './PerformanceMetrics';
+import { QuickActions } from './QuickActions';
+import { Tooltip } from './Tooltip';
+import { RecentActivity } from './RecentActivity';
 
 interface Watch {
   id: string;
   brand: string;
+  model?: string;
   purchasePrice: number;
+  purchaseDate?: string;
   revenueAsIs: number | null;
   revenueCleaned: number | null;
   revenueServiced: number | null;
   status: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface DashboardProps {
   watches: Watch[];
   onAddWatch: () => void;
   onViewInventory: () => void;
+  onExport?: () => void;
 }
 
-export function Dashboard({ watches, onAddWatch, onViewInventory }: DashboardProps) {
+export function Dashboard({ watches, onAddWatch, onViewInventory, onExport }: DashboardProps) {
   const [metrics, setMetrics] = useState({
     totalPurchaseCost: 0,
     totalProjectedRevenue: { best: 0, medium: 0, basic: 0 },

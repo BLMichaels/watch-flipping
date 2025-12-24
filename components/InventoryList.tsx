@@ -10,6 +10,7 @@ import { QuickStats } from './QuickStats';
 import { FilterPresets } from './FilterPresets';
 import { AdvancedSearch } from './AdvancedSearch';
 import { EmptyState } from './EmptyState';
+import { Tooltip } from './Tooltip';
 
 interface Watch {
   id: string;
