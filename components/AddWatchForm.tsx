@@ -14,6 +14,7 @@ interface AddWatchFormProps {
 export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProps) {
   const [isScraping, setIsScraping] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showTemplates, setShowTemplates] = useState(false);
   const [formData, setFormData] = useState({
     ebayUrl: '',
     brand: initialData?.brand || '',
@@ -127,6 +128,15 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
     setFormData((prev) => ({
       ...prev,
       images: prev.images.filter((_: string, i: number) => i !== index),
+    }));
+  };
+
+  const handleTemplateSelect = (template: { brand: string; model: string; tags: string[] }) => {
+    setFormData((prev) => ({
+      ...prev,
+      brand: template.brand,
+      model: template.model,
+      tagsInput: template.tags.join(', '),
     }));
   };
 

@@ -5,6 +5,7 @@ import { Card } from './ui/Card';
 import { Button } from './ui/Button';
 import { Eye, Edit, Trash2, Search, ArrowUpDown } from 'lucide-react';
 import { ExportButton } from './ExportButton';
+import { Button } from './ui/Button';
 
 interface Watch {
   id: string;
@@ -16,6 +17,7 @@ interface Watch {
   revenueCleaned: number | null;
   revenueAsIs: number | null;
   status: string;
+  tags?: string[];
   aiRecommendation?: string | null;
 }
 
@@ -49,6 +51,8 @@ export function InventoryList({
   const [showOnlyProfitable, setShowOnlyProfitable] = useState(false);
   const [selectedWatches, setSelectedWatches] = useState<Set<string>>(new Set());
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
+  const [dateRange, setDateRange] = useState({ start: '', end: '' });
+  const [tagFilter, setTagFilter] = useState<string>('');
 
   const getBestProfit = (watch: Watch) => {
     const bestRevenue = watch.revenueServiced || watch.revenueCleaned || watch.revenueAsIs || 0;
@@ -101,7 +105,10 @@ export function InventoryList({
       })();
       const matchesPriceRange = (!priceRange.min || watch.purchasePrice >= parseFloat(priceRange.min)) &&
                                 (!priceRange.max || watch.purchasePrice <= parseFloat(priceRange.max));
-      return matchesSearch && matchesStatus && matchesBrand && matchesProfitable && matchesPriceRange;
+      const matchesDateRange = (!dateRange.start || (watch.purchaseDate && new Date(watch.purchaseDate) >= new Date(dateRange.start))) &&
+                                (!dateRange.end || (watch.purchaseDate && new Date(watch.purchaseDate) <= new Date(dateRange.end)));
+      const matchesTag = !tagFilter || (watch.tags && watch.tags.some((tag: string) => tag.toLowerCase().includes(tagFilter.toLowerCase())));
+      return matchesSearch && matchesStatus && matchesBrand && matchesProfitable && matchesPriceRange && matchesDateRange && matchesTag;
     });
 
     filtered.sort((a, b) => {
@@ -145,7 +152,7 @@ export function InventoryList({
     });
 
     return filtered;
-  }, [watches, searchTerm, sortField, sortDirection, statusFilter, brandFilter, showOnlyProfitable, priceRange]);
+  }, [watches, searchTerm, sortField, sortDirection, statusFilter, brandFilter, showOnlyProfitable, priceRange, dateRange, tagFilter]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -275,8 +282,11 @@ export function InventoryList({
             </select>
           </div>
           {filteredAndSortedWatches.length !== watches.length && (
-            <div className="mt-2 text-sm text-gray-600">
-              Showing {filteredAndSortedWatches.length} of {watches.length} watches
+            <div className="mt-2 flex items-center justify-between">
+              <div className="text-sm text-gray-600">
+                Showing {filteredAndSortedWatches.length} of {watches.length} watches
+              </div>
+              <ExportButton watches={filteredAndSortedWatches} label="Export Filtered" />
             </div>
           )}
         </Card>

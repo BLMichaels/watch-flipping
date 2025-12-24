@@ -19,9 +19,10 @@ interface Watch {
 
 interface ExportButtonProps {
   watches: Watch[];
+  label?: string;
 }
 
-export function ExportButton({ watches }: ExportButtonProps) {
+export function ExportButton({ watches, label = 'Export CSV' }: ExportButtonProps) {
   const exportToCSV = () => {
     // CSV headers
     const headers = [

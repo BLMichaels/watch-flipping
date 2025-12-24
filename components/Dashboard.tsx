@@ -329,6 +329,11 @@ export function Dashboard({ watches, onAddWatch, onViewInventory }: DashboardPro
           </Card>
         </div>
 
+        {/* Profit Calculator */}
+        <div className="mb-6">
+          <ProfitCalculator />
+        </div>
+
         {/* Charts Row 2 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           <Card>
