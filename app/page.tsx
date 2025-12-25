@@ -10,6 +10,7 @@ import { SummaryReport } from '@/components/SummaryReport';
 import { KeyboardShortcuts } from '@/components/KeyboardShortcuts';
 import { useToast, ToastContainer } from '@/components/Toast';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { LoadingState } from '@/components/LoadingState';
 
 type View = 'dashboard' | 'inventory' | 'watch-detail' | 'add-watch' | 'edit-watch' | 'summary';
 
@@ -293,14 +294,6 @@ export default function Home() {
   };
 
   // AI analysis temporarily disabled
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <LoadingSpinner size="lg" text="Loading your watch collection..." fullScreen />
-      </div>
-    );
-  }
 
   if (loading) {
     return <LoadingState message="Loading your watch inventory..." fullScreen />;
