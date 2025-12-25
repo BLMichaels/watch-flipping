@@ -41,6 +41,7 @@ interface InventoryListProps {
   onBulkStatusUpdate?: (ids: string[], status: string) => Promise<void>;
   onBulkDelete?: (ids: string[]) => Promise<void>;
   onAddWatch?: () => void;
+  onToggleFavorite?: (watchId: string, isFavorite: boolean) => Promise<void>;
 }
 
 type SortField = 'brand' | 'purchasePrice' | 'profit' | 'recommendation' | 'purchaseDate' | 'roi';
