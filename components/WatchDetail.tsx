@@ -464,6 +464,20 @@ export function WatchDetail({
 
             {/* AI Analysis - Temporarily disabled */}
           </div>
+
+          {/* History */}
+          <div className="lg:col-span-1">
+            <WatchHistory
+              watchId={watch.id}
+              createdAt={watch.createdAt}
+              updatedAt={watch.updatedAt}
+              purchaseDate={watch.purchaseDate}
+              soldDate={watch.soldDate}
+              status={watch.status}
+              purchasePrice={watch.purchasePrice}
+              soldPrice={watch.soldPrice}
+            />
+          </div>
         </div>
       </div>
 
