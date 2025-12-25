@@ -58,6 +58,7 @@ export async function PUT(
         aiAnalysis: body.aiAnalysis,
         aiRecommendation: body.aiRecommendation,
         aiConfidence: body.aiConfidence,
+        isFavorite: body.isFavorite !== undefined ? body.isFavorite : undefined,
       },
     });
     return NextResponse.json(watch);

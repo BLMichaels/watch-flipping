@@ -45,6 +45,7 @@ export async function POST(request: NextRequest) {
         aiAnalysis: body.aiAnalysis,
         aiRecommendation: body.aiRecommendation,
         aiConfidence: body.aiConfidence,
+        isFavorite: body.isFavorite || false,
       },
     });
     return NextResponse.json(watch);
