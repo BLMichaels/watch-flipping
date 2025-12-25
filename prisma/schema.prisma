@@ -52,11 +52,15 @@ model Watch {
   aiRecommendation  String?  // buy, pass, maybe
   aiConfidence      Float?
   
+  // Favorites
+  isFavorite        Boolean  @default(false)
+  
   // Timestamps
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   
   @@index([brand])
   @@index([status])
+  @@index([isFavorite])
 }
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Card } from './ui/Card';
 import { Button } from './ui/Button';
 import { Eye, Edit, Trash2, Search, ArrowUpDown, GitCompare } from 'lucide-react';
@@ -13,6 +13,8 @@ import { EmptyState } from './EmptyState';
 import { Tooltip } from './Tooltip';
 import { SearchSuggestions } from './SearchSuggestions';
 import { QuickFilters } from './QuickFilters';
+import { Pagination } from './Pagination';
+import { FavoriteButton } from './FavoriteButton';
 
 interface Watch {
   id: string;
@@ -27,6 +29,7 @@ interface Watch {
   status: string;
   tags?: string[];
   aiRecommendation?: string | null;
+  isFavorite?: boolean;
 }
 
 interface InventoryListProps {
@@ -52,6 +55,7 @@ export function InventoryList({
   onBulkStatusUpdate,
   onBulkDelete,
   onAddWatch,
+  onToggleFavorite,
 }: InventoryListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState<SortField>('brand');
@@ -144,6 +148,8 @@ export function InventoryList({
         } else {
           matchesQuickFilter = false;
         }
+      } else if (quickFilter === 'favorites') {
+        matchesQuickFilter = watch.isFavorite === true;
       }
       
       return matchesSearch && matchesStatus && matchesBrand && matchesProfitable && matchesPriceRange && matchesDateRange && matchesTag && matchesQuickFilter;
@@ -191,6 +197,17 @@ export function InventoryList({
 
     return filtered;
   }, [watches, searchTerm, sortField, sortDirection, statusFilter, brandFilter, showOnlyProfitable, priceRange, dateRange, tagFilter, advancedSearchCriteria, quickFilter]);
+
+  // Pagination
+  const totalPages = Math.ceil(filteredAndSortedWatches.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedWatches = filteredAndSortedWatches.slice(startIndex, endIndex);
+
+  // Reset to page 1 when filters change
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, statusFilter, brandFilter, showOnlyProfitable, quickFilter]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {

@@ -67,6 +67,13 @@ export function WatchDetail({
       return;
     }
 
+    // Validate file size (max 10MB)
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
+      alert('Image file size must be less than 10MB');
+      return;
+    }
+
     setUploading(true);
     try {
       await onImageUpload(watch.id, file);

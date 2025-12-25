@@ -13,6 +13,7 @@ const filters = [
   { id: 'high-roi', label: 'High ROI', icon: '📈' },
   { id: 'low-cost', label: 'Low Cost', icon: '💵' },
   { id: 'recent', label: 'Recently Added', icon: '🆕' },
+  { id: 'favorites', label: 'Favorites', icon: '⭐' },
 ];
 
 export function QuickFilters({ onFilter, activeFilter }: QuickFiltersProps) {

@@ -233,6 +233,26 @@ export default function Home() {
     }
   };
 
+  const handleToggleFavorite = async (watchId: string, isFavorite: boolean) => {
+    try {
+      const response = await fetch(`/api/watches/${watchId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isFavorite }),
+      });
+
+      if (response.ok) {
+        await fetchWatches();
+        showToast(isFavorite ? 'Added to favorites' : 'Removed from favorites', 'success');
+      } else {
+        showToast('Failed to update favorite status', 'error');
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      showToast('Failed to update favorite status', 'error');
+    }
+  };
+
   const handleStatusChange = async (watchId: string, status: string) => {
     try {
       const watch = watches.find(w => w.id === watchId);
