@@ -18,6 +18,7 @@ import { FavoriteButton } from './FavoriteButton';
 import { ItemsPerPageSelector } from './ItemsPerPageSelector';
 import { WatchCard } from './WatchCard';
 import { SavedSearches } from './SavedSearches';
+import { CSVImport } from './CSVImport';
 
 interface Watch {
   id: string;
@@ -46,6 +47,7 @@ interface InventoryListProps {
   onBulkDelete?: (ids: string[]) => Promise<void>;
   onAddWatch?: () => void;
   onToggleFavorite?: (watchId: string, isFavorite: boolean) => Promise<void>;
+  onImportWatches?: (watches: any[]) => Promise<void>;
 }
 
 type SortField = 'brand' | 'purchasePrice' | 'profit' | 'recommendation' | 'purchaseDate' | 'roi';
@@ -61,6 +63,7 @@ export function InventoryList({
   onBulkDelete,
   onAddWatch,
   onToggleFavorite,
+  onImportWatches,
 }: InventoryListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState<SortField>('brand');

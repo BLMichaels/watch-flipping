@@ -235,6 +235,45 @@ export default function Home() {
     }
   };
 
+  const handleImportWatches = async (watches: any[]) => {
+    try {
+      let successCount = 0;
+      let errorCount = 0;
+
+      for (const watchData of watches) {
+        try {
+          const response = await fetch('/api/watches', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              ...watchData,
+              images: watchData.images || [],
+              tags: watchData.tags || [],
+            }),
+          });
+
+          if (response.ok) {
+            successCount++;
+          } else {
+            errorCount++;
+          }
+        } catch (error) {
+          errorCount++;
+          console.error('Error importing watch:', error);
+        }
+      }
+
+      await fetchWatches();
+      showToast(
+        `Imported ${successCount} watches${errorCount > 0 ? `, ${errorCount} failed` : ''}`,
+        errorCount > 0 ? 'error' : 'success'
+      );
+    } catch (error) {
+      console.error('Error importing watches:', error);
+      showToast('Failed to import watches', 'error');
+    }
+  };
+
   const handleToggleFavorite = async (watchId: string, isFavorite: boolean) => {
     try {
       const response = await fetch(`/api/watches/${watchId}`, {
@@ -252,6 +291,40 @@ export default function Home() {
     } catch (error) {
       console.error('Error toggling favorite:', error);
       showToast('Failed to update favorite status', 'error');
+    }
+  };
+
+  const handleConditionUpdate = async (watchId: string, condition: string) => {
+    try {
+      const watch = watches.find(w => w.id === watchId);
+      if (!watch) return;
+
+      const conditionLabels: Record<string, string> = {
+        excellent: 'Excellent - Like new, minimal wear',
+        very_good: 'Very Good - Minor wear, fully functional',
+        good: 'Good - Normal wear, may need service',
+        fair: 'Fair - Significant wear, needs service',
+        poor: 'Poor - Heavy wear, major issues',
+      };
+
+      const response = await fetch(`/api/watches/${watchId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...watch,
+          conditionNotes: conditionLabels[condition] || condition,
+        }),
+      });
+
+      if (response.ok) {
+        await fetchWatches();
+        showToast('Condition assessment updated', 'success');
+      } else {
+        showToast('Failed to update condition', 'error');
+      }
+    } catch (error) {
+      console.error('Error updating condition:', error);
+      showToast('Failed to update condition', 'error');
     }
   };
 
@@ -391,6 +464,7 @@ export default function Home() {
             onImageUpload={handleImageUpload}
             onImageDelete={handleImageDelete}
             onStatusChange={handleStatusChange}
+            onConditionUpdate={handleConditionUpdate}
           />
         </div>
       )}
