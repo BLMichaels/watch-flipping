@@ -100,7 +100,6 @@ export function WatchDetail({
       setDeleting(null);
     }
   };
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const getStatusColor = (status: string) => {
     switch (status) {
