@@ -84,6 +84,7 @@ export function InventoryList({
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(20);
   const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
+  const [showQuickCompare, setShowQuickCompare] = useState(false);
 
   const getBestProfit = (watch: Watch) => {
     const bestRevenue = watch.revenueServiced || watch.revenueCleaned || watch.revenueAsIs || 0;
