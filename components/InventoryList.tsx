@@ -5,6 +5,7 @@ import { Card } from './ui/Card';
 import { Button } from './ui/Button';
 import { Eye, Edit, Trash2, Search, ArrowUpDown, GitCompare, MoreVertical, LayoutGrid, List } from 'lucide-react';
 import { ExportButton } from './ExportButton';
+import { ExportOptions } from './ExportOptions';
 import { WatchComparison } from './WatchComparison';
 import { QuickStats } from './QuickStats';
 import { FilterPresets } from './FilterPresets';
@@ -317,6 +318,18 @@ export function InventoryList({
         </div>
 
         <QuickStats watches={watches} />
+        
+        {/* Saved Searches */}
+        <SavedSearches
+          onLoadSearch={(filters) => {
+            if (filters.searchTerm) setSearchTerm(filters.searchTerm);
+            if (filters.status) setStatusFilter(filters.status);
+            if (filters.brand) setBrandFilter(filters.brand);
+            if (filters.quickFilter) setQuickFilter(filters.quickFilter);
+            setCurrentPage(1);
+          }}
+        />
+        
         <div className="mb-4">
           <QuickFilters
             onFilter={(filter) => {

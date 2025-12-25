@@ -6,6 +6,7 @@ import { Button } from './ui/Button';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { TrendingUp, DollarSign, Package, Percent, Clock, CheckCircle, AlertCircle } from 'lucide-react';
 import { ExportButton } from './ExportButton';
+import { ExportOptions } from './ExportOptions';
 import { ProfitCalculator } from './ProfitCalculator';
 import { WatchReminders } from './WatchReminders';
 import { PerformanceMetrics } from './PerformanceMetrics';
@@ -157,7 +158,7 @@ export function Dashboard({ watches, onAddWatch, onViewInventory, onExport }: Da
           <Button onClick={onViewInventory} variant="secondary" size="lg">
             View Inventory
           </Button>
-          <ExportButton watches={watches} />
+          <ExportOptions watches={watches} />
         </div>
 
         {/* Summary Alert */}
