@@ -7,6 +7,7 @@ import { ArrowLeft, Edit, Trash2, X, Upload } from 'lucide-react';
 import { QuickStatusUpdate } from './QuickStatusUpdate';
 import { WatchHistory } from './WatchHistory';
 import { ConditionAssessment } from './ConditionAssessment';
+import { WatchNotes } from './WatchNotes';
 
 interface Watch {
   id: string;
@@ -47,6 +48,7 @@ interface WatchDetailProps {
   onImageDelete: (watchId: string, imageUrl: string) => Promise<void>;
   onStatusChange?: (watchId: string, status: string) => Promise<void>;
   onConditionUpdate?: (watchId: string, condition: string) => Promise<void>;
+  onUpdateNotes?: (watchId: string, notes: string) => Promise<void>;
 }
 
 export function WatchDetail({
@@ -58,6 +60,7 @@ export function WatchDetail({
   onImageDelete,
   onStatusChange,
   onConditionUpdate,
+  onUpdateNotes,
 }: WatchDetailProps) {
   const [uploading, setUploading] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
@@ -478,6 +481,17 @@ export function WatchDetail({
                   onUpdateCondition={async (assessment) => {
                     await onConditionUpdate(watch.id, assessment);
                   }}
+                />
+              </div>
+            )}
+
+            {/* Watch Notes */}
+            {onUpdateNotes && (
+              <div className="lg:col-span-1">
+                <WatchNotes
+                  watchId={watch.id}
+                  notes={watch.notes}
+                  onUpdateNotes={onUpdateNotes}
                 />
               </div>
             )}

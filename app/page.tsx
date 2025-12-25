@@ -294,6 +294,32 @@ export default function Home() {
     }
   };
 
+  const handleUpdateNotes = async (watchId: string, notes: string) => {
+    try {
+      const watch = watches.find(w => w.id === watchId);
+      if (!watch) return;
+
+      const response = await fetch(`/api/watches/${watchId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...watch,
+          notes,
+        }),
+      });
+
+      if (response.ok) {
+        await fetchWatches();
+        showToast('Notes updated successfully', 'success');
+      } else {
+        showToast('Failed to update notes', 'error');
+      }
+    } catch (error) {
+      console.error('Error updating notes:', error);
+      showToast('Failed to update notes', 'error');
+    }
+  };
+
   const handleConditionUpdate = async (watchId: string, condition: string) => {
     try {
       const watch = watches.find(w => w.id === watchId);

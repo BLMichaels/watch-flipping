@@ -17,6 +17,7 @@ import { ValueTrends } from './ValueTrends';
 import { BrandInsights } from './BrandInsights';
 import { WatchStats } from './WatchStats';
 import { PriceTracker } from './PriceTracker';
+import { ProfitAnalysis } from './ProfitAnalysis';
 
 interface Watch {
   id: string;
@@ -365,6 +366,11 @@ export function Dashboard({ watches, onAddWatch, onViewInventory, onExport }: Da
         {/* Watch Statistics */}
         <div className="mb-6">
           <WatchStats watches={watches} />
+        </div>
+
+        {/* Profit Analysis */}
+        <div className="mb-6">
+          <ProfitAnalysis watches={watches} />
         </div>
 
         {/* Price Tracker */}

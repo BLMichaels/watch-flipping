@@ -19,6 +19,7 @@ import { ItemsPerPageSelector } from './ItemsPerPageSelector';
 import { WatchCard } from './WatchCard';
 import { SavedSearches } from './SavedSearches';
 import { CSVImport } from './CSVImport';
+import { QuickCompare } from './QuickCompare';
 
 interface Watch {
   id: string;
@@ -279,7 +280,19 @@ export function InventoryList({
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Inventory</h1>
               <p className="text-gray-600">Manage your watch collection</p>
             </div>
-            <ExportOptions watches={watches} />
+            <div className="flex items-center gap-2">
+              {selectedWatches.size >= 2 && (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setShowQuickCompare(true)}
+                >
+                  <GitCompare className="h-4 w-4 mr-1" />
+                  Compare ({selectedWatches.size})
+                </Button>
+              )}
+              <ExportOptions watches={watches} />
+            </div>
           </div>
           
           {/* Quick Stats */}
