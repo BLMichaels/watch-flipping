@@ -1,11 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from './ui/Card';
 import { Button } from './ui/Button';
 import { ArrowLeft, Edit, Trash2, X, Upload } from 'lucide-react';
 import { QuickStatusUpdate } from './QuickStatusUpdate';
-import { useState, useRef } from 'react';
 
 interface Watch {
   id: string;
