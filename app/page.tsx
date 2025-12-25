@@ -442,6 +442,7 @@ export default function Home() {
               }
             }}
             onAddWatch={handleAddWatch}
+            onImportWatches={handleImportWatches}
           />
           <div className="fixed bottom-6 right-6">
             <button
