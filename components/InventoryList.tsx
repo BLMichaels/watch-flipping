@@ -682,6 +682,16 @@ export function InventoryList({
         />
       )}
 
+      {showQuickCompare && selectedWatches.size >= 2 && (
+        <QuickCompare
+          watches={filteredAndSortedWatches.filter((w: Watch) => selectedWatches.has(w.id))}
+          onClose={() => {
+            setShowQuickCompare(false);
+            setSelectedWatches(new Set());
+          }}
+        />
+      )}
+
       {/* Pagination Controls */}
       {filteredAndSortedWatches.length > 0 && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-4 p-4 bg-gray-50 rounded-lg">
