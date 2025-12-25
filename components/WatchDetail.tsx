@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from './ui/Card';
 import { Button } from './ui/Button';
 import { ArrowLeft, Edit, Trash2, X, Upload } from 'lucide-react';
 import { QuickStatusUpdate } from './QuickStatusUpdate';
+import { WatchHistory } from './WatchHistory';
 
 interface Watch {
   id: string;
