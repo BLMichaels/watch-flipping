@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { Card } from './ui/Card';
 import { Button } from './ui/Button';
-import { Eye, Edit, Trash2, Search, ArrowUpDown, GitCompare } from 'lucide-react';
+import { Eye, Edit, Trash2, Search, ArrowUpDown, GitCompare, MoreVertical } from 'lucide-react';
 import { ExportButton } from './ExportButton';
 import { WatchComparison } from './WatchComparison';
 import { QuickStats } from './QuickStats';
@@ -15,6 +15,7 @@ import { SearchSuggestions } from './SearchSuggestions';
 import { QuickFilters } from './QuickFilters';
 import { Pagination } from './Pagination';
 import { FavoriteButton } from './FavoriteButton';
+import { ItemsPerPageSelector } from './ItemsPerPageSelector';
 
 interface Watch {
   id: string;
@@ -411,9 +412,9 @@ export function InventoryList({
         </Card>
 
         {/* Table */}
-        <Card>
-          <div className="overflow-x-auto">
-            <table className="w-full">
+        <Card className="overflow-x-auto">
+          <div className="overflow-x-auto -mx-4 sm:mx-0">
+            <table className="w-full min-w-[800px]">
               <thead>
                 <tr className="border-b border-gray-200">
                   <th className="text-left py-3 px-4 font-semibold text-gray-700 w-12">

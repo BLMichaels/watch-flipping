@@ -14,6 +14,7 @@ import { Tooltip } from './Tooltip';
 import { RecentActivity } from './RecentActivity';
 import { ValueTrends } from './ValueTrends';
 import { BrandInsights } from './BrandInsights';
+import { WatchStats } from './WatchStats';
 
 interface Watch {
   id: string;
@@ -357,6 +358,11 @@ export function Dashboard({ watches, onAddWatch, onViewInventory, onExport }: Da
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           <RecentActivity watches={watches} />
           <ValueTrends watches={watches} />
+        </div>
+
+        {/* Watch Statistics */}
+        <div className="mb-6">
+          <WatchStats watches={watches} />
         </div>
 
         {/* Brand Insights */}
