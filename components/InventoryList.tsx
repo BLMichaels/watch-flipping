@@ -11,6 +11,8 @@ import { FilterPresets } from './FilterPresets';
 import { AdvancedSearch } from './AdvancedSearch';
 import { EmptyState } from './EmptyState';
 import { Tooltip } from './Tooltip';
+import { SearchSuggestions } from './SearchSuggestions';
+import { QuickFilters } from './QuickFilters';
 
 interface Watch {
   id: string;
@@ -18,6 +20,7 @@ interface Watch {
   model: string;
   purchasePrice: number;
   purchaseDate?: string;
+  referenceNumber?: string | null;
   revenueServiced: number | null;
   revenueCleaned: number | null;
   revenueAsIs: number | null;
@@ -162,7 +165,7 @@ export function InventoryList({
     });
 
     return filtered;
-  }, [watches, searchTerm, sortField, sortDirection, statusFilter, brandFilter, showOnlyProfitable, priceRange, dateRange, tagFilter, advancedSearchCriteria]);
+  }, [watches, searchTerm, sortField, sortDirection, statusFilter, brandFilter, showOnlyProfitable, priceRange, dateRange, tagFilter, advancedSearchCriteria, quickFilter]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -265,6 +268,15 @@ export function InventoryList({
         </div>
 
         <QuickStats watches={watches} />
+        <div className="mb-4">
+          <QuickFilters
+            onFilter={(filter) => {
+              setQuickFilter(filter === quickFilter ? '' : filter);
+              setActivePreset('');
+            }}
+            activeFilter={quickFilter}
+          />
+        </div>
         <div className="mb-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <FilterPresets
             onApplyPreset={(preset) => {
@@ -275,6 +287,7 @@ export function InventoryList({
             }}
             onClearFilters={() => {
               setActivePreset('');
+              setQuickFilter('');
               setStatusFilter('all');
               setBrandFilter('all');
               setShowOnlyProfitable(false);
@@ -296,14 +309,29 @@ export function InventoryList({
         <Card className="mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 z-10" />
               <input
                 type="text"
                 placeholder="Search by brand or model..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setShowSuggestions(true);
+                }}
+                onFocus={() => setShowSuggestions(true)}
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
+              {showSuggestions && (
+                <SearchSuggestions
+                  watches={watches}
+                  searchTerm={searchTerm}
+                  onSelect={(suggestion) => {
+                    setSearchTerm(suggestion);
+                    setShowSuggestions(false);
+                  }}
+                />
+              )}
             </div>
             <select
               value={statusFilter}
