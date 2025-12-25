@@ -32,6 +32,8 @@ interface Watch {
   aiAnalysis?: string | null;
   aiRecommendation?: string | null;
   aiConfidence?: number | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface WatchDetailProps {

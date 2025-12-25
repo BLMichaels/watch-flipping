@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { Card } from './ui/Card';
 import { Button } from './ui/Button';
-import { Eye, Edit, Trash2, Search, ArrowUpDown, GitCompare, MoreVertical } from 'lucide-react';
+import { Eye, Edit, Trash2, Search, ArrowUpDown, GitCompare, MoreVertical, LayoutGrid, List } from 'lucide-react';
 import { ExportButton } from './ExportButton';
 import { WatchComparison } from './WatchComparison';
 import { QuickStats } from './QuickStats';
@@ -16,6 +16,7 @@ import { QuickFilters } from './QuickFilters';
 import { Pagination } from './Pagination';
 import { FavoriteButton } from './FavoriteButton';
 import { ItemsPerPageSelector } from './ItemsPerPageSelector';
+import { WatchCard } from './WatchCard';
 
 interface Watch {
   id: string;
@@ -76,6 +77,7 @@ export function InventoryList({
   const [quickFilter, setQuickFilter] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(20);
+  const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
 
   const getBestProfit = (watch: Watch) => {
     const bestRevenue = watch.revenueServiced || watch.revenueCleaned || watch.revenueAsIs || 0;
@@ -411,10 +413,36 @@ export function InventoryList({
           )}
         </Card>
 
-        {/* Table */}
-        <Card className="overflow-x-auto">
-          <div className="overflow-x-auto -mx-4 sm:mx-0">
-            <table className="w-full min-w-[800px]">
+        {/* View Mode Toggle */}
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600">View:</span>
+            <Button
+              variant={viewMode === 'table' ? 'primary' : 'secondary'}
+              size="sm"
+              onClick={() => setViewMode('table')}
+              className={viewMode === 'table' ? '' : 'bg-white border-2 border-gray-300 text-gray-700 font-medium hover:bg-gray-50'}
+            >
+              <List className="h-4 w-4 mr-1" />
+              Table
+            </Button>
+            <Button
+              variant={viewMode === 'cards' ? 'primary' : 'secondary'}
+              size="sm"
+              onClick={() => setViewMode('cards')}
+              className={viewMode === 'cards' ? '' : 'bg-white border-2 border-gray-300 text-gray-700 font-medium hover:bg-gray-50'}
+            >
+              <LayoutGrid className="h-4 w-4 mr-1" />
+              Cards
+            </Button>
+          </div>
+        </div>
+
+        {/* Table View */}
+        {viewMode === 'table' && (
+          <Card className="overflow-x-auto">
+            <div className="overflow-x-auto -mx-4 sm:mx-0">
+              <table className="w-full min-w-[800px]">
               <thead>
                 <tr className="border-b border-gray-200">
                   <th className="text-left py-3 px-4 font-semibold text-gray-700 w-12">
@@ -586,10 +614,27 @@ export function InventoryList({
                     </tr>
                   ))
                 )}
-              </tbody>
-            </table>
+            </tbody>
+          </table>
+        </div>
+      </Card>
+        )}
+
+        {/* Card View */}
+        {viewMode === 'cards' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {paginatedWatches.map((watch: Watch) => (
+              <WatchCard
+                key={watch.id}
+                watch={watch}
+                onView={onViewWatch}
+                onEdit={onEditWatch}
+                onDelete={onDeleteWatch}
+                onToggleFavorite={onToggleFavorite}
+              />
+            ))}
           </div>
-        </Card>
+        )}
       </div>
       {showComparison && selectedWatches.size >= 2 && (
         <WatchComparison
