@@ -49,7 +49,6 @@ interface Watch {
 export default function Home() {
   const [view, setView] = useState<View>('dashboard');
   const [watches, setWatches] = useState<Watch[]>([]);
-  const [loading, setLoading] = useState(true);
   const [selectedWatch, setSelectedWatch] = useState<Watch | null>(null);
   const [loading, setLoading] = useState(true);
   const { toasts, showToast, removeToast } = useToast();
