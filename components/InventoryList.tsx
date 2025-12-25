@@ -32,6 +32,7 @@ interface Watch {
   tags?: string[];
   aiRecommendation?: string | null;
   isFavorite?: boolean;
+  images: string[];
 }
 
 interface InventoryListProps {
