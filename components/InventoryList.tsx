@@ -66,6 +66,8 @@ export function InventoryList({
   const [showComparison, setShowComparison] = useState(false);
   const [activePreset, setActivePreset] = useState<string>('');
   const [advancedSearchCriteria, setAdvancedSearchCriteria] = useState<any>(null);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [quickFilter, setQuickFilter] = useState<string>('');
 
   const getBestProfit = (watch: Watch) => {
     const bestRevenue = watch.revenueServiced || watch.revenueCleaned || watch.revenueAsIs || 0;

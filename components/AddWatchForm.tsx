@@ -102,6 +102,28 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Use centralized validation
+    const validation = validateWatchData(formData);
+    if (!validation.isValid) {
+      const newErrors: Record<string, string> = {};
+      validation.errors.forEach((error) => {
+        if (error.includes('Brand')) newErrors.brand = error;
+        if (error.includes('Model')) newErrors.model = error;
+        if (error.includes('Purchase price')) newErrors.purchasePrice = error;
+        if (error.includes('Revenue')) {
+          if (error.includes('As-Is')) newErrors.revenueAsIs = error;
+          if (error.includes('Cleaned')) newErrors.revenueCleaned = error;
+          if (error.includes('Serviced')) newErrors.revenueServiced = error;
+        }
+        if (error.includes('Service cost')) newErrors.serviceCost = error;
+        if (error.includes('Cleaning cost')) newErrors.cleaningCost = error;
+        if (error.includes('Other costs')) newErrors.otherCosts = error;
+        if (error.includes('Sold price')) newErrors.soldPrice = error;
+      });
+      setErrors(newErrors);
+      return;
+    }
     
     if (!validateForm()) {
       return;
