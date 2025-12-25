@@ -123,7 +123,30 @@ export function InventoryList({
       const matchesDateRange = (!dateRange.start || (watch.purchaseDate && new Date(watch.purchaseDate) >= new Date(dateRange.start))) &&
                                 (!dateRange.end || (watch.purchaseDate && new Date(watch.purchaseDate) <= new Date(dateRange.end)));
       const matchesTag = !tagFilter || (watch.tags && watch.tags.some((tag: string) => tag.toLowerCase().includes(tagFilter.toLowerCase())));
-      return matchesSearch && matchesStatus && matchesBrand && matchesProfitable && matchesPriceRange && matchesDateRange && matchesTag;
+      
+      // Quick filters
+      let matchesQuickFilter = true;
+      if (quickFilter === 'high-profit') {
+        const bestRevenue = watch.revenueServiced || watch.revenueCleaned || watch.revenueAsIs || 0;
+        matchesQuickFilter = (bestRevenue - watch.purchasePrice) > 1000;
+      } else if (quickFilter === 'high-roi') {
+        const bestRevenue = watch.revenueServiced || watch.revenueCleaned || watch.revenueAsIs || 0;
+        const profit = bestRevenue - watch.purchasePrice;
+        const roi = watch.purchasePrice > 0 ? (profit / watch.purchasePrice) * 100 : 0;
+        matchesQuickFilter = roi > 30;
+      } else if (quickFilter === 'low-cost') {
+        matchesQuickFilter = watch.purchasePrice < 1000;
+      } else if (quickFilter === 'recent') {
+        if (watch.purchaseDate) {
+          const purchaseDate = new Date(watch.purchaseDate);
+          const daysSincePurchase = (Date.now() - purchaseDate.getTime()) / (1000 * 60 * 60 * 24);
+          matchesQuickFilter = daysSincePurchase <= 30;
+        } else {
+          matchesQuickFilter = false;
+        }
+      }
+      
+      return matchesSearch && matchesStatus && matchesBrand && matchesProfitable && matchesPriceRange && matchesDateRange && matchesTag && matchesQuickFilter;
     });
 
     filtered.sort((a, b) => {
