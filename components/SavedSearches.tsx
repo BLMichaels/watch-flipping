@@ -18,9 +18,15 @@ interface SavedSearch {
 
 interface SavedSearchesProps {
   onLoadSearch: (filters: SavedSearch['filters']) => void;
+  currentFilters?: {
+    searchTerm?: string;
+    status?: string;
+    brand?: string;
+    quickFilter?: string;
+  };
 }
 
-export function SavedSearches({ onLoadSearch }: SavedSearchesProps) {
+export function SavedSearches({ onLoadSearch, currentFilters }: SavedSearchesProps) {
   const [savedSearches, setSavedSearches] = useState<SavedSearch[]>([]);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [searchName, setSearchName] = useState('');
@@ -90,9 +96,8 @@ export function SavedSearches({ onLoadSearch }: SavedSearchesProps) {
               onChange={(e) => setSearchName(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-2"
               onKeyDown={(e) => {
-                if (e.key === 'Enter' && searchName.trim()) {
-                  // This would need to receive current filters as prop
-                  setShowSaveDialog(false);
+                if (e.key === 'Enter' && searchName.trim() && currentFilters) {
+                  saveCurrentSearch(currentFilters);
                 }
               }}
             />
@@ -100,7 +105,22 @@ export function SavedSearches({ onLoadSearch }: SavedSearchesProps) {
               <Button
                 variant="primary"
                 size="sm"
-                onClick={() => setShowSaveDialog(false)}
+                onClick={() => {
+                  if (currentFilters) {
+                    saveCurrentSearch(currentFilters);
+                  }
+                }}
+                disabled={!searchName.trim() || !currentFilters}
+              >
+                Save
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  setShowSaveDialog(false);
+                  setSearchName('');
+                }}
               >
                 Cancel
               </Button>

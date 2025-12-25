@@ -328,6 +328,12 @@ export function InventoryList({
             if (filters.quickFilter) setQuickFilter(filters.quickFilter);
             setCurrentPage(1);
           }}
+          currentFilters={{
+            searchTerm,
+            status: statusFilter !== 'all' ? statusFilter : undefined,
+            brand: brandFilter !== 'all' ? brandFilter : undefined,
+            quickFilter: quickFilter || undefined,
+          }}
         />
         
         <div className="mb-4">
