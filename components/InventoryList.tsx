@@ -276,7 +276,7 @@ export function InventoryList({
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Inventory</h1>
               <p className="text-gray-600">Manage your watch collection</p>
             </div>
-            <ExportButton watches={watches} />
+            <ExportOptions watches={watches} />
           </div>
           
           {/* Quick Stats */}
@@ -428,7 +428,7 @@ export function InventoryList({
               <div className="text-sm text-gray-600">
                 Showing {filteredAndSortedWatches.length} of {watches.length} watches
               </div>
-              <ExportButton watches={filteredAndSortedWatches} label="Export Filtered" />
+              <ExportOptions watches={filteredAndSortedWatches} label="Export Filtered" />
             </div>
           )}
         </Card>
