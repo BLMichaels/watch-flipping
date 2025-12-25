@@ -601,15 +601,26 @@ export function InventoryList({
         />
       )}
 
-      {/* Pagination */}
-      {filteredAndSortedWatches.length > itemsPerPage && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-          itemsPerPage={itemsPerPage}
-          totalItems={filteredAndSortedWatches.length}
-        />
+      {/* Pagination Controls */}
+      {filteredAndSortedWatches.length > 0 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-4 p-4 bg-gray-50 rounded-lg">
+          <ItemsPerPageSelector
+            itemsPerPage={itemsPerPage}
+            onItemsPerPageChange={(items) => {
+              setItemsPerPage(items);
+              setCurrentPage(1);
+            }}
+          />
+          {filteredAndSortedWatches.length > itemsPerPage && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              itemsPerPage={itemsPerPage}
+              totalItems={filteredAndSortedWatches.length}
+            />
+          )}
+        </div>
       )}
     </div>
   );
