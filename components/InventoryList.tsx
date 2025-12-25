@@ -17,6 +17,7 @@ import { Pagination } from './Pagination';
 import { FavoriteButton } from './FavoriteButton';
 import { ItemsPerPageSelector } from './ItemsPerPageSelector';
 import { WatchCard } from './WatchCard';
+import { SavedSearches } from './SavedSearches';
 
 interface Watch {
   id: string;
