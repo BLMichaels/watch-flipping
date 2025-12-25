@@ -155,13 +155,82 @@ export default function Home() {
     }
   };
 
-  // Image upload/delete temporarily disabled
-  const handleImageUpload = async () => {
-    alert('Image upload is temporarily disabled');
+  const handleImageUpload = async (watchId: string, file: File) => {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch(`/api/watches/${watchId}/images`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Update the watch in state
+        setWatches((prev) =>
+          prev.map((w) =>
+            w.id === watchId
+              ? { ...w, images: [...w.images, data.imageUrl] }
+              : w
+          )
+        );
+        // Update selected watch if it's the one being edited
+        if (selectedWatch?.id === watchId) {
+          setSelectedWatch((prev) =>
+            prev
+              ? { ...prev, images: [...prev.images, data.imageUrl] }
+              : null
+          );
+        }
+        showToast('Image uploaded successfully', 'success');
+      } else {
+        const error = await response.json();
+        showToast(error.error || 'Failed to upload image', 'error');
+        throw new Error(error.error || 'Failed to upload image');
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      throw error;
+    }
   };
 
-  const handleImageDelete = async () => {
-    alert('Image deletion is temporarily disabled');
+  const handleImageDelete = async (watchId: string, imageUrl: string) => {
+    try {
+      const response = await fetch(
+        `/api/watches/${watchId}/images?imageUrl=${encodeURIComponent(imageUrl)}`,
+        {
+          method: 'DELETE',
+        }
+      );
+
+      if (response.ok) {
+        // Update the watch in state
+        setWatches((prev) =>
+          prev.map((w) =>
+            w.id === watchId
+              ? { ...w, images: w.images.filter((img) => img !== imageUrl) }
+              : w
+          )
+        );
+        // Update selected watch if it's the one being edited
+        if (selectedWatch?.id === watchId) {
+          setSelectedWatch((prev) =>
+            prev
+              ? { ...prev, images: prev.images.filter((img) => img !== imageUrl) }
+              : null
+          );
+        }
+        showToast('Image deleted successfully', 'success');
+      } else {
+        const error = await response.json();
+        showToast(error.error || 'Failed to delete image', 'error');
+        throw new Error(error.error || 'Failed to delete image');
+      }
+    } catch (error) {
+      console.error('Error deleting image:', error);
+      throw error;
+    }
   };
 
   const handleStatusChange = async (watchId: string, status: string) => {

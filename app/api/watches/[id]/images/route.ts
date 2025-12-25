@@ -61,6 +61,10 @@ export async function POST(
   }
 }
 
+// Note: For production on Vercel, consider using cloud storage (AWS S3, Cloudinary, or Vercel Blob)
+// as serverless functions have ephemeral filesystems. This implementation works for development/testing.
+}
+
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }

@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from './ui/Card';
 import { Button } from './ui/Button';
-import { ArrowLeft, Edit, Trash2, X } from 'lucide-react';
+import { ArrowLeft, Edit, Trash2, X, Upload } from 'lucide-react';
 import { QuickStatusUpdate } from './QuickStatusUpdate';
+import { useState, useRef } from 'react';
 
 interface Watch {
   id: string;
@@ -53,6 +54,52 @@ export function WatchDetail({
   onImageDelete,
   onStatusChange,
 }: WatchDetailProps) {
+  const [uploading, setUploading] = useState(false);
+  const [deleting, setDeleting] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
+    }
+
+    setUploading(true);
+    try {
+      await onImageUpload(watch.id, file);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      alert('Failed to upload image. Please try again.');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleDeleteImage = async (imageUrl: string) => {
+    if (!confirm('Are you sure you want to delete this image?')) {
+      return;
+    }
+
+    setDeleting(imageUrl);
+    try {
+      await onImageDelete(watch.id, imageUrl);
+      if (selectedImage === imageUrl) {
+        setSelectedImage(null);
+      }
+    } catch (error) {
+      console.error('Error deleting image:', error);
+      alert('Failed to delete image. Please try again.');
+    } finally {
+      setDeleting(null);
+    }
+  };
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const getStatusColor = (status: string) => {
@@ -163,8 +210,9 @@ export function WatchDetail({
                           />
                         </div>
                         <button
-                          onClick={() => onImageDelete(watch.id, imageUrl)}
-                          className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={() => handleDeleteImage(imageUrl)}
+                          disabled={deleting === imageUrl}
+                          className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-50"
                         >
                           <X className="h-4 w-4" />
                         </button>
@@ -173,9 +221,21 @@ export function WatchDetail({
                   </div>
                 )}
                 <div className="mt-4">
-                  <p className="text-sm text-gray-500">
-                    Image upload is temporarily disabled.
-                  </p>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileSelect}
+                    accept="image/*"
+                    className="hidden"
+                  />
+                  <Button
+                    variant="secondary"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploading}
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    {uploading ? 'Uploading...' : 'Upload Image'}
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -371,6 +431,29 @@ export function WatchDetail({
                 </div>
               </CardContent>
             </Card>
+
+            {/* Image Lightbox Modal */}
+            {selectedImage && (
+              <div
+                className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4"
+                onClick={() => setSelectedImage(null)}
+              >
+                <div className="relative max-w-4xl max-h-full">
+                  <button
+                    onClick={() => setSelectedImage(null)}
+                    className="absolute top-4 right-4 text-white bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-75"
+                  >
+                    <X className="h-6 w-6" />
+                  </button>
+                  <img
+                    src={selectedImage}
+                    alt={`${watch.brand} ${watch.model}`}
+                    className="max-w-full max-h-[90vh] object-contain rounded-lg"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </div>
+              </div>
+            )}
 
             {/* AI Analysis - Temporarily disabled */}
           </div>
