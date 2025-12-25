@@ -543,6 +543,13 @@ export function InventoryList({
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-1">
+                          {onToggleFavorite && (
+                            <FavoriteButton
+                              watchId={watch.id}
+                              isFavorite={watch.isFavorite || false}
+                              onToggle={onToggleFavorite}
+                            />
+                          )}
                           <Button
                             variant="ghost"
                             size="sm"
@@ -587,6 +594,17 @@ export function InventoryList({
             setShowComparison(false);
             setSelectedWatches(new Set());
           }}
+        />
+      )}
+
+      {/* Pagination */}
+      {filteredAndSortedWatches.length > itemsPerPage && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          itemsPerPage={itemsPerPage}
+          totalItems={filteredAndSortedWatches.length}
         />
       )}
     </div>
