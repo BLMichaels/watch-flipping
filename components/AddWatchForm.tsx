@@ -45,6 +45,11 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
   const handleScrape = async () => {
     if (!formData.ebayUrl) return;
 
+    if (!formData.ebayUrl.includes('ebay.com')) {
+      alert('Please enter a valid eBay URL');
+      return;
+    }
+
     setIsScraping(true);
     try {
       const response = await fetch('/api/ebay-scrape', {
@@ -54,10 +59,15 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
       });
 
       if (!response.ok) {
-        throw new Error('Failed to scrape eBay listing');
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to scrape eBay listing');
       }
 
       const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
       
       setFormData((prev) => ({
         ...prev,
@@ -67,7 +77,12 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
         title: data.title || prev.title,
         description: data.description || prev.description,
         images: data.images || prev.images,
+        imageUrls: data.images ? data.images.join('\n') : prev.imageUrls,
+        conditionNotes: data.condition || prev.conditionNotes,
       }));
+
+      // Show success message
+      alert(`Successfully scraped listing!\n\nTitle: ${data.title}\nPrice: ${data.price ? '$' + data.price : 'Not found'}`);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to scrape eBay listing';
       alert(errorMessage);
@@ -77,7 +92,55 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
   };
 
   const handleAnalyze = async () => {
-    alert('AI analysis is temporarily disabled. Please enter revenue estimates manually.');
+    if (!formData.brand || !formData.model || !formData.purchasePrice) {
+      alert('Please fill in brand, model, and purchase price before analyzing.');
+      return;
+    }
+
+    setIsScraping(true);
+    try {
+      const response = await fetch('/api/ai-analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          listingData: {
+            title: formData.title || `${formData.brand} ${formData.model}`,
+            description: formData.description || '',
+            price: parseFloat(formData.purchasePrice.toString()) || null,
+            images: formData.images || [],
+            condition: formData.conditionNotes || null,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to analyze watch');
+      }
+
+      const analysis = await response.json();
+      
+      // Populate form with AI analysis results
+      setFormData((prev) => ({
+        ...prev,
+        revenueAsIs: analysis.estimatedMarketValue?.asIs || prev.revenueAsIs,
+        revenueCleaned: analysis.estimatedMarketValue?.cleaned || prev.revenueCleaned,
+        revenueServiced: analysis.estimatedMarketValue?.serviced || prev.revenueServiced,
+        serviceCost: analysis.maintenanceCost || prev.serviceCost,
+        conditionNotes: prev.conditionNotes || 
+          (analysis.potentialIssues?.length > 0 
+            ? `AI Analysis: ${analysis.explanation}\n\nPotential Issues: ${analysis.potentialIssues.join(', ')}`
+            : `AI Analysis: ${analysis.explanation}`),
+      }));
+
+      // Show analysis results
+      alert(`AI Analysis Complete!\n\nRecommendation: ${analysis.recommendation.toUpperCase()}\nConfidence: ${analysis.confidence}%\n\n${analysis.explanation}\n\nEstimated ROI: ${analysis.estimatedROI}%\nTime to Sell: ${analysis.timeToSell}`);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to analyze watch';
+      alert(errorMessage);
+    } finally {
+      setIsScraping(false);
+    }
   };
 
   const validateForm = (): boolean => {
