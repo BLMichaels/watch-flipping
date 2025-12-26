@@ -256,22 +256,21 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
         <form onSubmit={handleSubmit}>
           <Card className="mb-6">
             <CardHeader>
-              <CardTitle>eBay Listing (Optional - Currently Disabled)</CardTitle>
+              <CardTitle>eBay Listing (Optional)</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex gap-2">
                 <input
                   type="url"
-                  placeholder="eBay scraping temporarily disabled - use manual entry"
+                  placeholder="Paste eBay listing URL here"
                   value={formData.ebayUrl}
                   onChange={(e) => setFormData((prev) => ({ ...prev, ebayUrl: e.target.value }))}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-100"
-                  disabled
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <Button
                   type="button"
                   onClick={handleScrape}
-                  disabled={true}
+                  disabled={isScraping || !formData.ebayUrl}
                 >
                   Disabled
                 </Button>
@@ -555,12 +554,12 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
                   type="button"
                   variant="secondary"
                   onClick={handleAnalyze}
-                  disabled={true}
+                  disabled={isScraping}
                 >
-                  AI Analysis (Disabled)
+                  {isScraping ? 'Analyzing...' : 'AI Analysis'}
                 </Button>
                 <p className="text-sm text-gray-500 mt-2">
-                  AI analysis is temporarily disabled. Please enter revenue estimates manually.
+                  Get AI-powered revenue estimates and recommendations
                 </p>
               </div>
             </CardContent>
