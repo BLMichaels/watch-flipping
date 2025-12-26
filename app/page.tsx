@@ -387,11 +387,64 @@ export default function Home() {
     }
   };
 
-  const handleAnalyzeWatch = async (id: string) => {
-    alert('AI analysis is temporarily disabled');
-  };
+  const handleAnalyzeWatch = async (watchId: string) => {
+    const watch = watches.find(w => w.id === watchId);
+    if (!watch) return;
 
-  // AI analysis temporarily disabled
+    try {
+      const response = await fetch('/api/ai-analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          listingData: {
+            title: watch.title || `${watch.brand} ${watch.model}`,
+            description: watch.description || '',
+            price: watch.purchasePrice || null,
+            images: watch.images || [],
+            condition: watch.conditionNotes || null,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to analyze watch');
+      }
+
+      const analysis = await response.json();
+      
+      // Update watch with AI analysis results
+      const updatedWatch = {
+        ...watch,
+        revenueAsIs: analysis.estimatedMarketValue?.asIs ?? watch.revenueAsIs,
+        revenueCleaned: analysis.estimatedMarketValue?.cleaned ?? watch.revenueCleaned,
+        revenueServiced: analysis.estimatedMarketValue?.serviced ?? watch.revenueServiced,
+        serviceCost: analysis.maintenanceCost ?? watch.serviceCost,
+        conditionNotes: watch.conditionNotes || 
+          (analysis.potentialIssues?.length > 0 
+            ? `AI Analysis: ${analysis.explanation}\n\nPotential Issues: ${analysis.potentialIssues.join(', ')}`
+            : `AI Analysis: ${analysis.explanation}`),
+      };
+
+      const updateResponse = await fetch(`/api/watches/${watchId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedWatch),
+      });
+
+      if (updateResponse.ok) {
+        await fetchWatches();
+        showToast(
+          `AI Analysis Complete! Recommendation: ${analysis.recommendation.toUpperCase()} (${analysis.confidence}% confidence)`,
+          'success'
+        );
+      } else {
+        showToast('Analysis complete but failed to update watch', 'error');
+      }
+    } catch (error) {
+      console.error('Error analyzing watch:', error);
+      showToast('Failed to analyze watch', 'error');
+    }
+  };
 
   if (loading) {
     return <LoadingState message="Loading your watch inventory..." fullScreen />;
