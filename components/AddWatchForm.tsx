@@ -276,7 +276,7 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
                 </Button>
               </div>
               <p className="text-sm text-gray-500 mt-2">
-                eBay scraping feature is temporarily disabled. Please enter watch details manually.
+                Automatically extract watch details from eBay listing
               </p>
             </CardContent>
           </Card>
