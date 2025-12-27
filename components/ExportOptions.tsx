@@ -2,6 +2,7 @@
 
 import { Button } from './ui/Button';
 import { Download, FileText, FileSpreadsheet } from 'lucide-react';
+import { ExportPDF } from './ExportPDF';
 
 interface Watch {
   [key: string]: any;
@@ -105,6 +106,7 @@ export function ExportOptions({ watches, label = 'Export' }: ExportOptionsProps)
         <FileText className="h-4 w-4" />
         JSON
       </Button>
+      <ExportPDF watches={watches} label="PDF" />
     </div>
   );
 }
