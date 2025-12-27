@@ -218,7 +218,7 @@ export function InventoryList({
     });
 
     return filtered;
-  }, [watches, searchTerm, sortField, sortDirection, statusFilter, brandFilter, showOnlyProfitable, priceRange, dateRange, tagFilter, advancedSearchCriteria, quickFilter]);
+  }, [watches, debouncedSearchTerm, sortField, sortDirection, statusFilter, brandFilter, showOnlyProfitable, priceRange, dateRange, tagFilter, advancedSearchCriteria, quickFilter]);
 
   // Pagination
   const totalPages = Math.ceil(filteredAndSortedWatches.length / itemsPerPage);
