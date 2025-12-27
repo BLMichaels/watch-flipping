@@ -23,6 +23,7 @@ import { CSVImport } from './CSVImport';
 import { QuickCompare } from './QuickCompare';
 import { ConfirmationDialog } from './ConfirmationDialog';
 import { QuickFiltersBar } from './QuickFiltersBar';
+import { BulkEdit } from './BulkEdit';
 
 interface Watch {
   id: string;

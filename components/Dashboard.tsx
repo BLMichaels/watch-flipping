@@ -21,6 +21,7 @@ import { ProfitAnalysis } from './ProfitAnalysis';
 import { DuplicateDetector } from './DuplicateDetector';
 import { DataQualityWarnings } from './DataQualityWarnings';
 import { WatchRecommendations } from './WatchRecommendations';
+import { StatsCards } from './StatsCards';
 
 interface Watch {
   id: string;
