@@ -133,9 +133,11 @@ export function InventoryList({
     const uniqueBrands = Array.from(new Set(watches.map(w => w.brand))).sort();
     
     let filtered = watches.filter((watch) => {
-      const matchesSearch =
-        watch.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        watch.model.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch = !debouncedSearchTerm ||
+        watch.brand?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+        watch.model?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+        watch.referenceNumber?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+        watch.title?.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
       const matchesStatus = statusFilter === 'all' || watch.status === statusFilter;
       const matchesBrand = brandFilter === 'all' || watch.brand === brandFilter;
       const matchesProfitable = !showOnlyProfitable || (() => {
