@@ -26,8 +26,9 @@ export function ExportPDF({ watches, label = 'Export to PDF' }: ExportPDFProps) 
     // Create a simple HTML table for PDF generation
     const tableRows = watches.map((watch) => {
       const bestRevenue = watch.revenueServiced || watch.revenueCleaned || watch.revenueAsIs || 0;
-      const profit = bestRevenue - watch.purchasePrice;
-      const roi = watch.purchasePrice > 0 ? ((profit / watch.purchasePrice) * 100).toFixed(1) : '0';
+      const purchasePrice = watch.purchasePrice || 0;
+      const profit = bestRevenue - purchasePrice;
+      const roi = purchasePrice > 0 ? ((profit / purchasePrice) * 100).toFixed(1) : '0';
 
       return `
         <tr>
