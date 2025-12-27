@@ -39,9 +39,10 @@ interface DashboardProps {
   onAddWatch: () => void;
   onViewInventory: () => void;
   onExport?: () => void;
+  onViewWatch?: (id: string) => void;
 }
 
-export function Dashboard({ watches, onAddWatch, onViewInventory, onExport }: DashboardProps) {
+export function Dashboard({ watches, onAddWatch, onViewInventory, onExport, onViewWatch }: DashboardProps) {
   const [metrics, setMetrics] = useState({
     totalPurchaseCost: 0,
     totalProjectedRevenue: { best: 0, medium: 0, basic: 0 },

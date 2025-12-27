@@ -477,6 +477,7 @@ export default function Home() {
           watches={watches}
           onAddWatch={handleAddWatch}
           onViewInventory={handleViewInventory}
+          onViewWatch={handleViewWatch}
           onExport={() => {
             // Export functionality handled by ExportButton
           }}
