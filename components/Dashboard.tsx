@@ -18,6 +18,7 @@ import { BrandInsights } from './BrandInsights';
 import { WatchStats } from './WatchStats';
 import { PriceTracker } from './PriceTracker';
 import { ProfitAnalysis } from './ProfitAnalysis';
+import { DuplicateDetector } from './DuplicateDetector';
 
 interface Watch {
   id: string;

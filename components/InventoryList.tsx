@@ -20,6 +20,7 @@ import { WatchCard } from './WatchCard';
 import { SavedSearches } from './SavedSearches';
 import { CSVImport } from './CSVImport';
 import { QuickCompare } from './QuickCompare';
+import { ConfirmationDialog } from './ConfirmationDialog';
 
 interface Watch {
   id: string;
@@ -640,7 +641,7 @@ export function InventoryList({
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => onDeleteWatch(watch.id)}
+                            onClick={() => setConfirmDelete({ isOpen: true, watchId: watch.id })}
                             title="Delete"
                             className="p-1"
                           >

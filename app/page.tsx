@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Dashboard } from '@/components/Dashboard';
 import { InventoryList } from '@/components/InventoryList';
 import { WatchDetail } from '@/components/WatchDetail';
