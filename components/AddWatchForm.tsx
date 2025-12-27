@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from './ui/Card';
 import { Button } from './ui/Button';
 import { X, FileText } from 'lucide-react';
 import { WatchTemplates } from './WatchTemplates';
+import { WatchTemplatesManager } from './WatchTemplatesManager';
 import { validateWatchData } from './DataValidation';
 
 interface AddWatchFormProps {
