@@ -69,6 +69,11 @@ export default function Home() {
     enabled: true,
   });
 
+  const handleAddWatch = () => {
+    setView('add-watch');
+    setSelectedWatch(null);
+  };
+
   useEffect(() => {
     fetchWatches();
   }, []);
@@ -86,6 +91,20 @@ export default function Home() {
       setLoading(false);
     }
   };
+
+  // Keyboard navigation
+  useKeyboardNavigation({
+    onAddWatch: handleAddWatch,
+    onDashboard: () => setView('dashboard'),
+    onInventory: () => setView('inventory'),
+    onEscape: () => {
+      if (view === 'watch-detail' || view === 'add-watch' || view === 'edit-watch') {
+        setView('inventory');
+        setSelectedWatch(null);
+      }
+    },
+    enabled: true,
+  });
 
   const handleAddWatch = () => {
     setSelectedWatch(null);
