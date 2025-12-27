@@ -396,6 +396,11 @@ export function Dashboard({ watches, onAddWatch, onViewInventory, onExport, onVi
           </div>
         )}
 
+        {/* Price Alerts */}
+        <div className="mb-6">
+          <PriceAlerts watches={watches} />
+        </div>
+
         {/* Duplicate Detection */}
         {onViewWatch && (
           <div className="mb-6">

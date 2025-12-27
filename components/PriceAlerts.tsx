@@ -68,10 +68,10 @@ export function PriceAlerts({ watches, onAlertTriggered }: PriceAlertsProps) {
   };
 
   // Check alerts periodically
-  useState(() => {
+  useEffect(() => {
     const interval = setInterval(checkAlerts, 60000); // Check every minute
     return () => clearInterval(interval);
-  });
+  }, [alerts, watches]);
 
   const addAlert = () => {
     if (!selectedWatch || (!targetProfit && !targetPrice)) return;
