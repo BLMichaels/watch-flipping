@@ -8,7 +8,7 @@ import { useState } from 'react';
 interface Watch {
   id: string;
   brand: string;
-  model: string;
+  model?: string;
   referenceNumber?: string | null;
   purchasePrice: number;
 }
@@ -76,7 +76,7 @@ export function DuplicateDetector({ watches, onViewWatch }: DuplicateDetectorPro
           {duplicates.map((group, index) => (
             <div key={index} className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
               <p className="text-sm font-medium text-yellow-800 mb-2">
-                {group.watches[0].brand} {group.watches[0].model}
+                {group.watches[0].brand} {group.watches[0].model || '(No Model)'}
                 {group.watches[0].referenceNumber && ` (Ref: ${group.watches[0].referenceNumber})`}
               </p>
               <div className="space-y-2">
