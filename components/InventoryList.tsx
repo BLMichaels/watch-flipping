@@ -24,6 +24,7 @@ import { QuickCompare } from './QuickCompare';
 import { ConfirmationDialog } from './ConfirmationDialog';
 import { QuickFiltersBar } from './QuickFiltersBar';
 import { BulkEdit } from './BulkEdit';
+import { AdvancedFilters } from './AdvancedFilters';
 
 interface Watch {
   id: string;
