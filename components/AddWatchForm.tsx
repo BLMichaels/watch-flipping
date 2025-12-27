@@ -219,12 +219,17 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
     }));
   };
 
-  const handleTemplateSelect = (template: { brand: string; model: string; tags: string[] }) => {
+  const handleTemplateSelect = (template: any) => {
     setFormData((prev) => ({
       ...prev,
-      brand: template.brand,
-      model: template.model,
-      tagsInput: template.tags.join(', '),
+      brand: template.brand || prev.brand,
+      model: template.model || prev.model,
+      referenceNumber: template.referenceNumber || prev.referenceNumber,
+      tagsInput: template.tags?.join(', ') || prev.tagsInput,
+      purchasePrice: template.defaultPurchasePrice?.toString() || prev.purchasePrice,
+      serviceCost: template.defaultServiceCost?.toString() || prev.serviceCost,
+      cleaningCost: template.defaultCleaningCost?.toString() || prev.cleaningCost,
+      notes: template.notes || prev.notes,
     }));
   };
 
