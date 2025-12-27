@@ -27,7 +27,7 @@ export function DuplicateDetector({ watches, onViewWatch }: DuplicateDetectorPro
 
     watches.forEach((watch) => {
       // Create a key based on brand, model, and reference number
-      const key = `${watch.brand?.toLowerCase().trim()}_${watch.model?.toLowerCase().trim()}_${watch.referenceNumber?.toLowerCase().trim() || 'no-ref'}`;
+      const key = `${(watch.brand || 'no-brand').toLowerCase().trim()}_${(watch.model || 'no-model').toLowerCase().trim()}_${(watch.referenceNumber || 'no-ref').toLowerCase().trim()}`;
       
       if (!seen.has(key)) {
         seen.set(key, []);
