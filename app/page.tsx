@@ -55,20 +55,6 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const { toasts, showToast, removeToast } = useToast();
 
-  // Keyboard navigation
-  useKeyboardNavigation({
-    onAddWatch: handleAddWatch,
-    onDashboard: () => setView('dashboard'),
-    onInventory: () => setView('inventory'),
-    onEscape: () => {
-      if (view === 'watch-detail' || view === 'add-watch' || view === 'edit-watch') {
-        setView('inventory');
-        setSelectedWatch(null);
-      }
-    },
-    enabled: true,
-  });
-
   const handleAddWatch = () => {
     setView('add-watch');
     setSelectedWatch(null);
