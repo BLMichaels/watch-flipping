@@ -342,6 +342,32 @@ export function InventoryList({
 
         <QuickStats watches={watches} />
         
+        {/* Quick Filters Bar */}
+        <QuickFiltersBar
+          activeFilters={{
+            status: statusFilter !== 'all' ? statusFilter : undefined,
+            brand: brandFilter !== 'all' ? brandFilter : undefined,
+            priceRange: priceRange.min || priceRange.max ? priceRange : undefined,
+            dateRange: dateRange.start || dateRange.end ? dateRange : undefined,
+            tags: tagFilter ? [tagFilter] : undefined,
+          }}
+          onRemoveFilter={(filterType) => {
+            if (filterType === 'status') setStatusFilter('all');
+            else if (filterType === 'brand') setBrandFilter('all');
+            else if (filterType === 'priceRange') setPriceRange({ min: '', max: '' });
+            else if (filterType === 'dateRange') setDateRange({ start: '', end: '' });
+            else if (filterType === 'tags') setTagFilter('');
+          }}
+          onClearAll={() => {
+            setStatusFilter('all');
+            setBrandFilter('all');
+            setPriceRange({ min: '', max: '' });
+            setDateRange({ start: '', end: '' });
+            setTagFilter('');
+            setShowOnlyProfitable(false);
+          }}
+        />
+        
         {/* Saved Searches */}
         <SavedSearches
           onLoadSearch={(filters) => {
