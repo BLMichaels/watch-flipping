@@ -804,6 +804,47 @@ export function InventoryList({
         }}
         onCancel={() => setConfirmDelete({ isOpen: false, watchId: null })}
       />
+
+      {/* Bulk Edit */}
+      {showBulkEdit && (
+        <BulkEdit
+          selectedWatches={selectedWatches}
+          onBulkUpdate={async (ids, updates) => {
+            // Update all selected watches
+            await Promise.all(ids.map(async (id) => {
+              const watch = watches.find(w => w.id === id);
+              if (!watch) return;
+              
+              const updateData: any = { ...watch };
+              if (updates.status) updateData.status = updates.status;
+              if (updates.tags) {
+                const existingTags = watch.tags || [];
+                const newTags = updates.tags;
+                updateData.tags = [...new Set([...existingTags, ...newTags])];
+              }
+              if (updates.serviceCost !== undefined) updateData.serviceCost = updates.serviceCost;
+              if (updates.cleaningCost !== undefined) updateData.cleaningCost = updates.cleaningCost;
+              if (updates.otherCosts !== undefined) updateData.otherCosts = updates.otherCosts;
+
+              const response = await fetch(`/api/watches/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updateData),
+              });
+              return response.ok;
+            }));
+            
+            // Refresh the list
+            if (onBulkStatusUpdate) {
+              await onBulkStatusUpdate(ids, updates.status || '');
+            }
+          }}
+          onClose={() => {
+            setShowBulkEdit(false);
+            setSelectedWatches(new Set());
+          }}
+        />
+      )}
     </div>
   );
 }
