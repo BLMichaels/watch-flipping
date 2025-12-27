@@ -12,7 +12,7 @@ interface Watch {
   revenueServiced: number | null;
   revenueCleaned: number | null;
   revenueAsIs: number | null;
-  images: string[];
+  images?: string[];
   conditionNotes?: string | null;
   purchaseDate?: string;
 }
