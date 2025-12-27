@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { useKeyboardNavigation } from '@/components/KeyboardNavigation';
 import { Dashboard } from '@/components/Dashboard';
 import { InventoryList } from '@/components/InventoryList';
 import { WatchDetail } from '@/components/WatchDetail';

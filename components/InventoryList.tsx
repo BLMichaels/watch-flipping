@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import { useDebounce } from './useDebounce';
 import { Card } from './ui/Card';
 import { Button } from './ui/Button';
 import { Eye, Edit, Trash2, Search, ArrowUpDown, GitCompare, MoreVertical, LayoutGrid, List } from 'lucide-react';
