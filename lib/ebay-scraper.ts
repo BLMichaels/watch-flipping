@@ -43,7 +43,7 @@ export async function scrapeeBayListing(url: string): Promise<eBayListingData> {
 
     // Extract images
     const imageMatches = html.match(/https?:\/\/[^"'\s]+\.(jpg|jpeg|png|webp)/gi) || [];
-    const images = [...new Set(imageMatches)].slice(0, 10); // Limit to 10 unique images
+    const images = Array.from(new Set(imageMatches)).slice(0, 10); // Limit to 10 unique images
 
     // Extract condition
     const conditionMatch = html.match(/<div[^>]*class="u-flL condText"[^>]*>([^<]+)<\/div>/i) ||
