@@ -4,10 +4,10 @@ import { Button } from './ui/Button';
 import { FileText } from 'lucide-react';
 
 interface Watch {
-  id: string;
+  id?: string;
   brand?: string;
   model?: string;
-  purchasePrice: number;
+  purchasePrice?: number;
   revenueServiced?: number | null;
   revenueCleaned?: number | null;
   revenueAsIs?: number | null;
@@ -33,7 +33,7 @@ export function ExportPDF({ watches, label = 'Export to PDF' }: ExportPDFProps) 
         <tr>
           <td>${watch.brand || 'N/A'}</td>
           <td>${watch.model || 'N/A'}</td>
-          <td>$${watch.purchasePrice.toLocaleString()}</td>
+          <td>$${purchasePrice.toLocaleString()}</td>
           <td>$${bestRevenue.toLocaleString()}</td>
           <td>$${profit.toLocaleString()}</td>
           <td>${roi}%</td>
@@ -79,7 +79,7 @@ export function ExportPDF({ watches, label = 'Export to PDF' }: ExportPDFProps) 
           </table>
           <div class="summary">
             <h2>Summary</h2>
-            <p>Total Investment: $${watches.reduce((sum, w) => sum + w.purchasePrice, 0).toLocaleString()}</p>
+            <p>Total Investment: $${watches.reduce((sum, w) => sum + (w.purchasePrice || 0), 0).toLocaleString()}</p>
             <p>Total Projected Value: $${watches.reduce((sum, w) => {
               const best = w.revenueServiced || w.revenueCleaned || w.revenueAsIs || 0;
               return sum + best;
