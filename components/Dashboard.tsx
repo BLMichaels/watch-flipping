@@ -19,6 +19,8 @@ import { WatchStats } from './WatchStats';
 import { PriceTracker } from './PriceTracker';
 import { ProfitAnalysis } from './ProfitAnalysis';
 import { DuplicateDetector } from './DuplicateDetector';
+import { DataQualityWarnings } from './DataQualityWarnings';
+import { WatchRecommendations } from './WatchRecommendations';
 
 interface Watch {
   id: string;

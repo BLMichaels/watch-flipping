@@ -21,6 +21,7 @@ import { SavedSearches } from './SavedSearches';
 import { CSVImport } from './CSVImport';
 import { QuickCompare } from './QuickCompare';
 import { ConfirmationDialog } from './ConfirmationDialog';
+import { QuickFiltersBar } from './QuickFiltersBar';
 
 interface Watch {
   id: string;
