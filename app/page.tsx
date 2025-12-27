@@ -92,11 +92,6 @@ export default function Home() {
     enabled: true,
   });
 
-  const handleAddWatch = () => {
-    setSelectedWatch(null);
-    setView('add-watch');
-  };
-
   const handleViewInventory = () => {
     setView('inventory');
   };
