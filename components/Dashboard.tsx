@@ -23,6 +23,7 @@ import { DataQualityWarnings } from './DataQualityWarnings';
 import { WatchRecommendations } from './WatchRecommendations';
 import { StatsCards } from './StatsCards';
 import { PriceAlerts } from './PriceAlerts';
+import { WatchAnalytics } from './WatchAnalytics';
 
 interface Watch {
   id: string;

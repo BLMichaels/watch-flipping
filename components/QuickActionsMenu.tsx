@@ -1,107 +1,105 @@
 'use client';
 
 import { Button } from './ui/Button';
-import { MoreVertical, Edit, Trash2, Eye, Star } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+import { Plus, FileDown, Search, BarChart3, Settings, X } from 'lucide-react';
+import { useState } from 'react';
 
 interface QuickActionsMenuProps {
-  watchId: string;
-  isFavorite?: boolean;
-  onView: () => void;
-  onEdit: () => void;
-  onDelete: () => void;
-  onToggleFavorite?: (watchId: string, isFavorite: boolean) => Promise<void>;
+  onAddWatch?: () => void;
+  onExport?: () => void;
+  onViewInventory?: () => void;
+  onViewDashboard?: () => void;
+  onViewSettings?: () => void;
 }
 
 export function QuickActionsMenu({
-  watchId,
-  isFavorite,
-  onView,
-  onEdit,
-  onDelete,
-  onToggleFavorite,
+  onAddWatch,
+  onExport,
+  onViewInventory,
+  onViewDashboard,
+  onViewSettings,
 }: QuickActionsMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
+  const actions = [
+    {
+      label: 'Add Watch',
+      icon: Plus,
+      onClick: onAddWatch,
+      variant: 'primary' as const,
+    },
+    {
+      label: 'Export Data',
+      icon: FileDown,
+      onClick: onExport,
+      variant: 'secondary' as const,
+    },
+    {
+      label: 'View Inventory',
+      icon: Search,
+      onClick: onViewInventory,
+      variant: 'secondary' as const,
+    },
+    {
+      label: 'View Dashboard',
+      icon: BarChart3,
+      onClick: onViewDashboard,
+      variant: 'secondary' as const,
+    },
+    {
+      label: 'Settings',
+      icon: Settings,
+      onClick: onViewSettings,
+      variant: 'secondary' as const,
+    },
+  ].filter(action => action.onClick);
 
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen]);
+  if (!isOpen) {
+    return (
+      <button
+        onClick={() => setIsOpen(true)}
+        className="fixed bottom-6 right-6 z-50 bg-blue-600 text-white rounded-full p-4 shadow-lg hover:bg-blue-700 transition-colors"
+        aria-label="Quick Actions"
+      >
+        <Plus className="h-6 w-6" />
+      </button>
+    );
+  }
 
   return (
-    <div className="relative" ref={menuRef}>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => setIsOpen(!isOpen)}
-        className="p-1"
-      >
-        <MoreVertical className="h-4 w-4" />
-      </Button>
-      {isOpen && (
-        <div className="absolute right-0 mt-1 w-48 bg-white rounded-md shadow-lg z-50 border border-gray-200">
-          <div className="py-1">
-            <button
-              onClick={() => {
-                onView();
-                setIsOpen(false);
-              }}
-              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
-            >
-              <Eye className="h-4 w-4" />
-              View Details
-            </button>
-            <button
-              onClick={() => {
-                onEdit();
-                setIsOpen(false);
-              }}
-              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
-            >
-              <Edit className="h-4 w-4" />
-              Edit
-            </button>
-            {onToggleFavorite && (
-              <button
-                onClick={async () => {
-                  await onToggleFavorite(watchId, !isFavorite);
+    <div className="fixed bottom-6 right-6 z-50">
+      <div className="bg-white rounded-lg shadow-xl border border-gray-200 p-4 min-w-[200px]">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-semibold text-gray-900">Quick Actions</h3>
+          <button
+            onClick={() => setIsOpen(false)}
+            className="text-gray-400 hover:text-gray-600"
+            aria-label="Close"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+        <div className="space-y-2">
+          {actions.map((action, index) => {
+            const Icon = action.icon;
+            return (
+              <Button
+                key={index}
+                variant={action.variant}
+                onClick={() => {
+                  action.onClick?.();
                   setIsOpen(false);
                 }}
-                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+                className="w-full justify-start"
+                size="sm"
               >
-                <Star className={`h-4 w-4 ${isFavorite ? 'fill-current text-yellow-500' : ''}`} />
-                {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
-              </button>
-            )}
-            <div className="border-t border-gray-200 my-1" />
-            <button
-              onClick={() => {
-                if (confirm('Are you sure you want to delete this watch?')) {
-                  onDelete();
-                }
-                setIsOpen(false);
-              }}
-              className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
-            >
-              <Trash2 className="h-4 w-4" />
-              Delete
-            </button>
-          </div>
+                <Icon className="h-4 w-4 mr-2" />
+                {action.label}
+              </Button>
+            );
+          })}
         </div>
-      )}
+      </div>
     </div>
   );
 }
-
