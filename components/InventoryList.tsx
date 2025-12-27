@@ -821,7 +821,7 @@ export function InventoryList({
               if (updates.tags) {
                 const existingTags = watch.tags || [];
                 const newTags = updates.tags;
-                updateData.tags = [...new Set([...existingTags, ...newTags])];
+                updateData.tags = Array.from(new Set([...existingTags, ...newTags]));
               }
               if (updates.serviceCost !== undefined) updateData.serviceCost = updates.serviceCost;
               if (updates.cleaningCost !== undefined) updateData.cleaningCost = updates.cleaningCost;
