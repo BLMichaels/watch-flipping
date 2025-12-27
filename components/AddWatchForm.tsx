@@ -607,10 +607,15 @@ export function AddWatchForm({ onSave, onCancel, initialData }: AddWatchFormProp
         </form>
       </div>
       {showTemplates && (
-        <WatchTemplates
-          onSelectTemplate={handleTemplateSelect}
-          onClose={() => setShowTemplates(false)}
-        />
+        <>
+          <WatchTemplates
+            onSelectTemplate={handleTemplateSelect}
+            onClose={() => setShowTemplates(false)}
+          />
+          <div className="mt-4">
+            <WatchTemplatesManager onSelectTemplate={handleTemplateSelect} />
+          </div>
+        </>
       )}
     </div>
   );
