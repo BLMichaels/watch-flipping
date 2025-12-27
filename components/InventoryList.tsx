@@ -138,7 +138,7 @@ export function InventoryList({
         watch.brand?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
         watch.model?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
         watch.referenceNumber?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-        watch.title?.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
+        (watch as any).title?.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
       const matchesStatus = statusFilter === 'all' || watch.status === statusFilter;
       const matchesBrand = brandFilter === 'all' || watch.brand === brandFilter;
       const matchesProfitable = !showOnlyProfitable || (() => {
