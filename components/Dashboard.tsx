@@ -157,6 +157,9 @@ export function Dashboard({ watches, onAddWatch, onViewInventory, onExport, onVi
           <p className="text-gray-600">Track your portfolio performance and inventory</p>
         </div>
 
+        {/* Stats Cards */}
+        <StatsCards watches={watches} />
+
         {/* Quick Actions */}
         <div className="mb-6 flex gap-4 items-center flex-wrap">
           <Button onClick={onAddWatch} size="lg">
