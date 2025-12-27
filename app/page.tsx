@@ -78,7 +78,7 @@ export default function Home() {
     }
   };
 
-  // Keyboard navigation
+  // Keyboard navigation - must be after handleAddWatch is declared
   useKeyboardNavigation({
     onAddWatch: handleAddWatch,
     onDashboard: () => setView('dashboard'),
