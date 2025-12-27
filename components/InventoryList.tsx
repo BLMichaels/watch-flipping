@@ -95,6 +95,7 @@ export function InventoryList({
     isOpen: false,
     watchId: null,
   });
+  const [showBulkEdit, setShowBulkEdit] = useState(false);
 
   const getBestProfit = (watch: Watch) => {
     const bestRevenue = watch.revenueServiced || watch.revenueCleaned || watch.revenueAsIs || 0;
@@ -294,15 +295,27 @@ export function InventoryList({
               <p className="text-gray-600">Manage your watch collection</p>
             </div>
             <div className="flex items-center gap-2">
-              {selectedWatches.size >= 2 && (
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => setShowQuickCompare(true)}
-                >
-                  <GitCompare className="h-4 w-4 mr-1" />
-                  Compare ({selectedWatches.size})
-                </Button>
+              {selectedWatches.size > 0 && (
+                <>
+                  {selectedWatches.size >= 2 && (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => setShowQuickCompare(true)}
+                    >
+                      <GitCompare className="h-4 w-4 mr-1" />
+                      Compare ({selectedWatches.size})
+                    </Button>
+                  )}
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => setShowBulkEdit(true)}
+                  >
+                    <Edit className="h-4 w-4 mr-1" />
+                    Bulk Edit ({selectedWatches.size})
+                  </Button>
+                </>
               )}
               <ExportOptions watches={watches} />
             </div>
@@ -347,6 +360,28 @@ export function InventoryList({
         </div>
 
         <QuickStats watches={watches} />
+
+        {/* Advanced Filters */}
+        <div className="mb-4">
+          <AdvancedFilters
+            onApply={(filters) => {
+              // Apply advanced filters
+              if (filters.minPrice !== undefined) setPriceRange(prev => ({ ...prev, min: filters.minPrice!.toString() }));
+              if (filters.maxPrice !== undefined) setPriceRange(prev => ({ ...prev, max: filters.maxPrice!.toString() }));
+              if (filters.dateFrom) setDateRange(prev => ({ ...prev, start: filters.dateFrom! }));
+              if (filters.dateTo) setDateRange(prev => ({ ...prev, end: filters.dateTo! }));
+              if (filters.brands && filters.brands.length > 0) setBrandFilter(filters.brands[0]);
+              if (filters.statuses && filters.statuses.length > 0) setStatusFilter(filters.statuses[0]);
+            }}
+            onClear={() => {
+              setPriceRange({ min: '', max: '' });
+              setDateRange({ start: '', end: '' });
+              setBrandFilter('all');
+              setStatusFilter('all');
+            }}
+            brands={Array.from(new Set(watches.map(w => w.brand).filter(Boolean)))}
+          />
+        </div>
         
         {/* Quick Filters Bar */}
         <QuickFiltersBar
