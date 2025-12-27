@@ -70,6 +70,7 @@ export function InventoryList({
   onImportWatches,
 }: InventoryListProps) {
   const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const [sortField, setSortField] = useState<SortField>('brand');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [statusFilter, setStatusFilter] = useState<string>('all');
