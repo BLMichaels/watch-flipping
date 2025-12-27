@@ -377,6 +377,20 @@ export function Dashboard({ watches, onAddWatch, onViewInventory, onExport, onVi
           <ProfitAnalysis watches={watches} />
         </div>
 
+        {/* Data Quality Warnings */}
+        {onViewWatch && (
+          <div className="mb-6">
+            <DataQualityWarnings watches={watches} onViewWatch={onViewWatch} />
+          </div>
+        )}
+
+        {/* Watch Recommendations */}
+        {onViewWatch && (
+          <div className="mb-6">
+            <WatchRecommendations watches={watches} onViewWatch={onViewWatch} />
+          </div>
+        )}
+
         {/* Duplicate Detection */}
         {onViewWatch && (
           <div className="mb-6">
