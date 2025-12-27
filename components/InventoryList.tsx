@@ -86,6 +86,10 @@ export function InventoryList({
   const [itemsPerPage, setItemsPerPage] = useState(20);
   const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
   const [showQuickCompare, setShowQuickCompare] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState<{ isOpen: boolean; watchId: string | null }>({
+    isOpen: false,
+    watchId: null,
+  });
 
   const getBestProfit = (watch: Watch) => {
     const bestRevenue = watch.revenueServiced || watch.revenueCleaned || watch.revenueAsIs || 0;
@@ -715,6 +719,23 @@ export function InventoryList({
           )}
         </div>
       )}
+
+      {/* Confirmation Dialog */}
+      <ConfirmationDialog
+        isOpen={confirmDelete.isOpen}
+        title="Delete Watch"
+        message="Are you sure you want to delete this watch? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+        onConfirm={() => {
+          if (confirmDelete.watchId) {
+            onDeleteWatch(confirmDelete.watchId);
+            setConfirmDelete({ isOpen: false, watchId: null });
+          }
+        }}
+        onCancel={() => setConfirmDelete({ isOpen: false, watchId: null })}
+      />
     </div>
   );
 }
